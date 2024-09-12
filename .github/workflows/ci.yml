@@ -95,7 +95,7 @@ jobs:
         python manage.py migrate --noinput
 
     - name: Find test modules
-      working-directory: ./AIM-Sniper-backend
+      working-directory: ./AIM_Sniper_backend
       run: |
         source .venv/bin/activate
         chmod +x find_test.sh
