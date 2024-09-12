@@ -40,7 +40,7 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Install Dependencies
-      working-directory: ./AIM-Sniper-backend
+      working-directory: AIM-Sniper-backend
       run: |
         if [ -f requirements.txt ]; then
           python -m venv .venv
