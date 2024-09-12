@@ -67,7 +67,7 @@ jobs:
 
     - name: Build and Push Docker Image
       run: |
-        cd tcp_backend/tcp_django
+        cd AIM_Sniper_backend
         docker buildx build --platform linux/arm64 -f Dockerfile -t ghcr.io/${{ github.actor }}/aim-backend-server:latest --push .
 
   deploy:
@@ -90,7 +90,7 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         script_stop: true
         script: |
-            cd /home/ec2-user/tcp/django-backend
+            cd /home/ec2-user/aim/django-backend
             
             docker-compose down
             echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
