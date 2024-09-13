@@ -97,7 +97,8 @@ jobs:
 
     - name: Add Github Actions IP to Security Group
       run: |
-        aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        IP_ADDRESS=$(curl -s ifconfig.me)
+        aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr $IP_ADDRESS/32
 
     - name: Deploy to Production
       uses: appleboy/ssh-action@v0.1.10
@@ -119,4 +120,5 @@ jobs:
             
     - name: Remove Github Actions IP From Security Group
       run: |
-        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        IP_ADDRESS=$(curl -s ifconfig.me)
+        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr $IP_ADDRESS/32
