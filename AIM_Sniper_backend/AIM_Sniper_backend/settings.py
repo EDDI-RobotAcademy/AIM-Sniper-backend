@@ -22,12 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-y2y!c&fehg39_jx08t-)uz6@d1&)ille@^n$6)5yyt5&xja)qa'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-
-
 
 # .env 파일에 개인 IP 설정한 값 가져오기
 load_dotenv()
@@ -46,11 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
     'corsheaders',
     'rest_framework',
+    'django_extensions',
     'kakao_oauth',
     'account',
+    'survey'
 ]
 
 MIDDLEWARE = [
@@ -62,6 +59,38 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+ALLOWED_HOSTS = [ALLOWED_HOST for ALLOWED_HOST in os.getenv('ALLOWED_HOSTS', '').split(',')]
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+
+# CORS 설정 옵션
+CORS_ALLOW_CREDENTIALS = True
+
+# CORS 헤더와 메서드 추가 설정 (필요 시)
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
 ]
 
 KAKAO = {
@@ -127,6 +156,7 @@ CORS_ALLOW_HEADERS = [
 
 ROOT_URLCONF = 'AIM_Sniper_backend.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -145,6 +175,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'AIM_Sniper_backend.wsgi.application'
 
+# redis 사용시 주석 해제
+# REDIS_HOST = os.getenv('REDIS_HOST')
+# REDIS_PORT = os.getenv('REDIS_PORT')
+# REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+#
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/0',  # Redis의 0번 DB를 사용합니다. 필요에 따라 DB 번호를 수정할 수 있습니다.
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#             'PASSWORD': REDIS_PASSWORD,  # Redis 비밀번호를 설정합니다.
+#             'SOCKET_CONNECT_TIMEOUT': 5,  # Redis 서버와의 연결 시도 제한 시간을 설정합니다.
+#         }
+#     }
+# }
 
 
 # Database
@@ -155,6 +201,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": os.getenv('DATABASE_NAME'),
+
         'USER': os.getenv('DATABASE_USER'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD'),
         'HOST': os.getenv('DATABASE_HOST'),
@@ -162,6 +209,7 @@ DATABASES = {
         'OPTIONS': {
                     'charset': 'utf8mb4',
         },
+
     }
 }
 
