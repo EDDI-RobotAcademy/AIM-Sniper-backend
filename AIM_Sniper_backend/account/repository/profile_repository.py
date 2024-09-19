@@ -10,3 +10,7 @@ class ProfileRepository(ABC):
     def findByNickname(self, nickname):
         pass
 
+    @abstractmethod
+    def create(self, nickname, email, password, salt, gender, birthyear, account):
+        pass
+

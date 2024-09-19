@@ -67,6 +67,51 @@ class AccountView(viewsets.ViewSet):
             print("닉네임 중복 체크 중 에러 발생:", e)
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def registerAccount(self, request):
+        try:
+            nickname = request.data.get("nickname")
+            email = request.data.get("email")
+            password = request.data.get("password")
+            gender = request.data.get("gender")  # 성별 추가
+            birthyear = request.data.get("birthyear")  # 생년월일 추가
+            loginType = request.data.get("loginType")
+
+            randomString = string.ascii_letters + string.digits + string.punctuation
+            salt = ''.join(random.choice(randomString) for _ in range(16))
+
+            encodedPassword = salt.encode("utf-8") + password.encode("utf-8")
+            hashedPassword = hashlib.sha256(encodedPassword)
+            password = hashedPassword.hexdigest()
+
+            if loginType == "NORMAL":
+                account = self.accountService.registerAccount(
+                    loginType=loginType,
+                    roleType="NORMAL",
+                    nickname=nickname,
+                    email=email,
+                    password=password,
+                    salt=salt,
+                    gender=gender,
+                    birthyear=birthyear,
+                )
+            else:
+                account = self.accountService.registerAccount(
+                    loginType=loginType,
+                    roleType="NORMAL",
+                    nickname=nickname,
+                    email=email,
+                    password=None,
+                    salt=None,
+                    gender=gender,
+                    birthyear=birthyear,
+                )
+
+            serializer = AccountSerializer(account)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print("계정 생성 중 에러 발생:", e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as e:
             print("비밀번호 확인 중 에러 발생:", e)
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
