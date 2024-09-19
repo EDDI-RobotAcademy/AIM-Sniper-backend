@@ -112,6 +112,43 @@ class AccountView(viewsets.ViewSet):
             print("계정 생성 중 에러 발생:", e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    def getNickname(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response(None, status=status.HTTP_200_OK)
+        profile = self.profileRepository.findByEmail(email)
+        if profile is None:
+            return Response(
+                {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
+            )  # 에러 처리 추가
+        nickname = profile.nickname
+        return Response(nickname, status=status.HTTP_200_OK)
+    def getGender(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response(None, status=status.HTTP_200_OK)
+        profile = self.profileRepository.findByEmail(email)
+        if profile is None:
+            return Response(
+                {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
+            )  # 에러 처리 추가
+        genderId = profile.gender_id
+        profileGenderType = self.profileRepository.findGenderTypeByGenderId(genderId)
+        genderType = profileGenderType.gender_type
+        return Response(genderType, status=status.HTTP_200_OK)
+
+    def getBirthyear(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response(None, status=status.HTTP_200_OK)
+        profile = self.profileRepository.findByEmail(email)
+        if profile is None:
+            return Response(
+                {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
+            )  # 에러 처리 추가
+        birthyear = profile.birthyear
+        return Response(birthyear, status=status.HTTP_200_OK)
+
         except Exception as e:
             print("비밀번호 확인 중 에러 발생:", e)
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
