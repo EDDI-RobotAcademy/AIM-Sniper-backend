@@ -57,4 +57,25 @@ class ProfileRepositoryImpl(ProfileRepository):
             account=account
         )
         return profile
+    def findByPassword(self, email,password):
+        try:
+            email = Profile.objects.get(email=email)
+            return email.password == password
+        except email.DoesNotExist:
+            print('password가 일치하지 않습니다.')
+            return None
+        except Exception as e:
+            print(f"password로 계정 찾는 중 에러 발생: {e}")
+            return None
+
+    def findById(self, accountId):
+        try:
+            profile = Profile.objects.get(account_id=accountId)
+            return profile
+        except Profile.DoesNotExist:
+            print('accountId와 일치하는 계정이 없습니다')
+            return None
+        except Exception as e:
+            print(f"accountId로 계정 찾는 중 에러 발생: {e}")
+            return None
 

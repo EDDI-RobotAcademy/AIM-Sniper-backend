@@ -7,7 +7,7 @@ import string
 from dotenv import load_dotenv
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-
+from account.entity.profile import Profile
 from account.repository.account_repository_impl import AccountRepositoryImpl
 from account.repository.profile_repository_impl import ProfileRepositoryImpl
 from account.serializers import AccountSerializer
@@ -149,6 +149,20 @@ class AccountView(viewsets.ViewSet):
         birthyear = profile.birthyear
         return Response(birthyear, status=status.HTTP_200_OK)
 
+    def checkPassword(self, request):
+        try:
+            email = request.data.get('email')
+            password = request.data.get('password')
+            profile = Profile.objects.get(email=email)
+            salt = profile.salt
+            hashed = salt.encode('utf-8') + password.encode("utf-8")
+            hash_obj = hashlib.sha256(hashed)
+            password = hash_obj.hexdigest()
+
+            isDuplicate = self.accountService.checkPasswordDuplication(email, password)
+
+            return Response({'isDuplicate': isDuplicate, 'message': 'password가 이미 존재' \
+                if isDuplicate else 'password 사용 가능'}, status=status.HTTP_200_OK)
         except Exception as e:
-            print("비밀번호 확인 중 에러 발생:", e)
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            print("password 중복 체크 중 에러 발생:", e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
