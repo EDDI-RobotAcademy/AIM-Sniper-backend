@@ -166,3 +166,19 @@ class AccountView(viewsets.ViewSet):
         except Exception as e:
             print("password 중복 체크 중 에러 발생:", e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    def modifyNickname(self,request):
+        email = request.data.get('email')
+        newNickname = request.data.get('newNickname')
+
+        if not email:
+            return Response(None,status=status.HTTP_200_OK)
+        profile = self.profileRepository.findByEmail(email)
+
+        if profile is None:
+            return Response(
+                {"error":"Profile not found"},status=status.HTTP_400_BAD_REQUEST
+            )
+        profile.nickname = newNickname
+        profile.save()
+        print(f"nickname: {profile.nickname}")
+        return Response(profile.nickname,status=status.HTTP_200_OK)
