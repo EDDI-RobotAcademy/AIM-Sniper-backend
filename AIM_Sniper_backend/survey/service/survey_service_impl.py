@@ -1,4 +1,5 @@
 from survey.repository.survey_description_repository_impl import SurveyDescriptionRepositoryImpl
+from survey.repository.survey_question_repository_impl import SurveyQuestionRepositoryImpl
 from survey.repository.survey_repository_impl import SurveyRepositoryImpl
 from survey.repository.survey_title_repository_impl import SurveyTitleRepositoryImpl
 from survey.service.survey_service import SurveyService
@@ -13,7 +14,7 @@ class SurveyServiceImpl(SurveyService):
             cls.__instance.__surveyRepository = SurveyRepositoryImpl.getInstance()
             cls.__instance.__surveyTitleRepository = SurveyTitleRepositoryImpl.getInstance()
             cls.__instance.__surveyDescriptionRepository = SurveyDescriptionRepositoryImpl.getInstance()
-            # cls.__instance.__surveyQuestionRepository = SurveyQuestionRepositoryImpl.getInstance()
+            cls.__instance.__surveyQuestionRepository = SurveyQuestionRepositoryImpl.getInstance()
             # cls.__instance.__surveySelectionRepository = SurveySelectionRepositoryImpl.getInstance()
             # cls.__instance.__surveyAnswerRepository = SurveyAnswerRepositoryImpl.getInstance()
 
@@ -45,8 +46,13 @@ class SurveyServiceImpl(SurveyService):
             print('설문 제목, 설명 저장 중 오류 발생 : ', e)
             return False
 
-    def registerQuestion(self, question):
-        pass
+    def registerQuestion(self, survey, questionTitle, questionType, essential):
+        try:
+            result = self.__surveyQuestionRepository.registerQuestion(survey, questionTitle, questionType, essential)
+            return result
+        except Exception as e:
+            print('설문 제목, 설명 저장 중 오류 발생 : ', e)
+            return False
 
     def registerSelection(self, selection):
         pass

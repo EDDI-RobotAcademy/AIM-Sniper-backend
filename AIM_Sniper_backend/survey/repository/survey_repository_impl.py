@@ -21,16 +21,14 @@ class SurveyRepositoryImpl(SurveyRepository):
     def getMaxId(self):
         survey = Survey.objects.all()
         surveyMaxId = len(survey)
-        print('id: ', surveyMaxId)
         return surveyMaxId
 
     def registerSurvey(self, surveyId):
-        Survey.objects.create(survey_id =surveyId)
+        Survey.objects.create(survey=surveyId)
         return surveyId
 
     def findSurvey(self, surveyId):
-        survey = Survey.objects.get(survey_id = surveyId)
-        print('findSurvey -> ', survey)
+        survey = Survey.objects.get(survey=surveyId)
         return survey
 
 
