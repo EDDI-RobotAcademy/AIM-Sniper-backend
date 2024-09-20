@@ -182,3 +182,25 @@ class AccountView(viewsets.ViewSet):
         profile.save()
         print(f"nickname: {profile.nickname}")
         return Response(profile.nickname,status=status.HTTP_200_OK)
+    def modifyPassword(self,request):
+        email = request.data.get('email')
+        newPassword = request.data.get('newPassword')
+        profile = Profile.objects.get(email=email)
+        salt = profile.salt
+        print(salt)
+        hashed = salt.encode('utf-8') + newPassword.encode("utf-8")
+        hash_obj = hashlib.sha256(hashed)
+        newpassword1 = hash_obj.hexdigest()
+
+        if not email:
+            return Response(None,status=status.HTTP_200_OK)
+        profile = self.profileRepository.findByEmail(email)
+
+        if profile is None:
+            return Response(
+                {"error":"Profile not found"},status=status.HTTP_400_BAD_REQUEST
+            )
+        profile.password = newpassword1
+        profile.save()
+        print(f"newPassword: {profile.password}")
+        return Response(profile.password,status=status.HTTP_200_OK)
