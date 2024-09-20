@@ -21,7 +21,8 @@ class SurveyQuestionRepositoryImpl(SurveyQuestionRepository):
         try:
             SurveyQuestion.objects.create(survey_id=survey, question=questionTitle,
                                           question_type=questionType, essential=essential)
-            return True
+            questionId = SurveyQuestion.objects.get(survey_id=survey, question=questionTitle)
+            return questionId.id
 
         except Exception as e:
             print('Question 저장 중 오류 발생 : ', e)
