@@ -22,3 +22,6 @@ class AccountService(ABC):
     def checkPasswordDuplication(self, email, password):
         pass
 
+    @abstractmethod
+    def withdrawAccount(self, accountId, withdrawReason):
+        pass

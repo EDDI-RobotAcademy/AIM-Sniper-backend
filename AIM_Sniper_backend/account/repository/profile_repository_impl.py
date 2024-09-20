@@ -79,3 +79,30 @@ class ProfileRepositoryImpl(ProfileRepository):
             print(f"accountId로 계정 찾는 중 에러 발생: {e}")
             return None
 
+    # 접속시간 기록을 위한 추가
+    def updateLastLogin(self, profile):
+        try:
+            profile.last_login = timezone.now() + timezone.timedelta(hours=9)
+            profile.save()
+        except Exception as e:
+            print(f"최근 접속시간 업데이트 중 에러 발생: {e}")
+            return None
+        
+    def update_login_history(self, profile):
+        try:
+            login_history = LoginHistory.objects.create(account_id=profile.account.id)
+            return login_history
+        except Exception as e:
+            print(f"로그인 기록 생성 중 에러 발생: {e}")
+            return None
+
+    def findGenderTypeByGenderId(self, genderId):
+        try:
+            genderType = ProfileGenderType.objects.get(id=genderId)
+            return genderType
+        except ProfileGenderType.DoesNotExist:
+            print('genderId와 일치하는 genderType이 없습니다')
+            return None
+        except Exception as e:
+            print(f"genderId로 genderType 찾는 중 에러 발생: {e}")
+            return None
