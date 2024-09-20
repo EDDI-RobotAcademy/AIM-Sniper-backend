@@ -9,3 +9,7 @@ class GoogleOauthService(ABC):
     def requestAccessToken(self, googleAuthCode):
         pass
 
+    @abstractmethod
+    def requestUserInfo(self, accessToken):
+        pass
+
