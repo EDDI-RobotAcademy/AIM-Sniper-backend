@@ -43,3 +43,8 @@ class NaverOauthServiceImpl(NaverOauthService):
         response = requests.post(self.tokenRequestUri, data=accessTokenRequestForm)
         return response.json()
 
+    def requestUserInfo(self, accessToken):
+        headers = {'Authorization': f'Bearer {accessToken}'}
+        response = requests.post(self.userInfoRequestUri, headers=headers)
+        return response.json()
+

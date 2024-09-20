@@ -8,3 +8,6 @@ class NaverOauthService(ABC):
     def requestNaverAccessToken(self,naverCode):
         pass
 
+    @abstractmethod
+    def requestUserInfo(self,accessToken):
+        pass
