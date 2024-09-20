@@ -1,11 +1,11 @@
 from django.db import models
 
-from survey.entity.survey_document import SurveyDocument
-
-
 class Survey(models.Model):
     id = models.AutoField(primary_key=True)
-    survey_document_id = models.ForeignKey(SurveyDocument, on_delete=models.CASCADE)
+    survey_id = models.CharField(max_length=128)
+
+    def __str__(self):
+        return f"Survey -> id: {self.id}"
 
 
     class Meta:
