@@ -21,4 +21,7 @@ urlpatterns = [
     path('modify-nickname',
          AccountView.as_view({'post':'modifyNickname'}),
         name='account-modify-nickname'),
+    path('modify-password',
+         AccountView.as_view({'post':'modifyPassword'}),
+        name='account-modify-password'),
 ]
