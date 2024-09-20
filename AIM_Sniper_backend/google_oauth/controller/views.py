@@ -37,3 +37,53 @@ class GoogleOauthView(viewsets.ViewSet):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
+    def googleUserInfoURI(self, request):
+        accessToken = request.data.get('access_token')
+        print(f"accessToken: {accessToken}")
+
+        try:
+            user_info = self.googleOauthService.requestUserInfo(accessToken)
+            return JsonResponse({'user_info': user_info})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    def redisAccessToken(self, request):
+        try:
+            email = request.data.get('email')
+            print(f"googleRedisAccessToken -> email: {email}")
+            account = self.accountService.findAccountByEmail(email)
+            if not account:
+                return Response({'error': 'Account not found'}, status=status.HTTP_404_NOT_FOUND)
+
+            userToken = str(uuid.uuid4())
+            print(f"type of account.id: {type(account.id)}")
+            self.RedisService.store_access_token(account.id, userToken)
+
+            accountId = self.RedisService.getValueByKey(userToken)
+            print(f"accountId: {accountId}")
+
+            return Response({'userToken': userToken}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Error storing access token in Redis:", e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def dropRedisTokenForLogout(self, request):
+        try:
+            userToken = request.data.get('userToken')
+            isSuccess = self.RedisService.deleteKey(userToken)
+
+            return Response({'isSuccess': isSuccess}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f'레디스 토큰 해제 중 에러 발생:', e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+
+

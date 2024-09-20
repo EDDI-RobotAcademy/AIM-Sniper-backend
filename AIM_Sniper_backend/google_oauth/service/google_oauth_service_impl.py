@@ -52,3 +52,14 @@ class GoogleOauthServiceImpl(GoogleOauthService):
 
         return response.json()
 
+    def requestUserInfo(self, accessToken):
+        headers = {'Authorization': f'Bearer {accessToken}'}
+        response = requests.post(self.userinfoRequestUri, headers=headers)
+
+        print(f"response content: {response.content}")
+
+        return response.json()
+
+
+
+
