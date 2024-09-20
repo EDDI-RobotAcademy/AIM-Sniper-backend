@@ -30,3 +30,30 @@ class AccountRepositoryImpl(AccountRepository):
         account = Account.objects.create(loginType=loginType, roleType=roleType)
         return account
 
+    def findById(self, accountId):
+        account = Account.objects.get(id=accountId)
+        return account
+
+    # 접속시간 기록을 위한 추가
+    def updateLastLogin(self, profile):
+        try:
+            profile.last_login = timezone.now() + timezone.timedelta(hours=9)
+            profile.save()
+        except Exception as e:
+            print(f"최근 접속시간 업데이트 중 에러 발생: {e}")
+            return None
+
+    def withdrawAccount(self, account, withdrawReason):
+        role_type = AccountRoleType.objects.get(id=account.roleType_id)
+
+        if role_type.roleType == "NORMAL":
+            role_type.roleType = "BLACKLIST"
+            role_type.save()
+
+            account.roleType = role_type
+            account.withdraw_reason = withdrawReason
+            account.withdraw_at = timezone.now()
+            account.save()
+            print('계정 탈퇴 완료')
+        else:
+            raise ValueError('이미 탈퇴된 계정입니다')

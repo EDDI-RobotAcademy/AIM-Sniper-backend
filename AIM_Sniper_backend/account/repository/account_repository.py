@@ -6,3 +6,14 @@ class AccountRepository(ABC):
     def create(self, loginType, roleType):
         pass
 
+    @abstractmethod
+    def findById(self, accountId):
+        pass
+
+    @abstractmethod
+    def updateLastLogin(self, profile):
+        pass
+
+    @abstractmethod
+    def withdrawAccount(self, account, withdrawReason):
+        pass
