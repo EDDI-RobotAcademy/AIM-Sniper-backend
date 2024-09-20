@@ -24,3 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('kakao_oauth/', include('kakao_oauth.urls')),
     path('account/', include('account.urls')),
+    path('naver_oauth/', include('naver_oauth.urls')),
+]
