@@ -10,7 +10,14 @@ class SurveyView(viewsets.ViewSet):
         return Response(surveyId, status=status.HTTP_200_OK)
 
     def registerTitleDescription(self, request):
-        print('registerTitleDescription')
+        surveyId = request.data.get('surveyId')
+        surveyTitle = request.data.get('surveyTitle')
+        surveyDescription = request.data.get('surveyDescription')
+        print(f'surveyId : {surveyId}, surveyTitle: {surveyTitle}, surveyDescription: {surveyDescription}')
+
+        survey = self.surveyService.getSurveyBySurveyId(surveyId)
+        result = self.surveyService.registerTitleDescription(survey, surveyTitle, surveyDescription)
+        return Response(surveyId, status=status.HTTP_200_OK)
 
 
     def registerQuestion(self, request):
