@@ -13,7 +13,7 @@ class SurveyService(ABC):
         pass
 
     @abstractmethod
-    def registerQuestion(self, question):
+    def registerQuestion(self, survey, questionTitle, questionType, essential):
         pass
 
     @abstractmethod

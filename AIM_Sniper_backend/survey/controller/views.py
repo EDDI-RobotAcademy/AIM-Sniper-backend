@@ -17,11 +17,18 @@ class SurveyView(viewsets.ViewSet):
 
         survey = self.surveyService.getSurveyBySurveyId(surveyId)
         result = self.surveyService.registerTitleDescription(survey, surveyTitle, surveyDescription)
-        return Response(surveyId, status=status.HTTP_200_OK)
+        return Response(result, status=status.HTTP_200_OK)
 
 
     def registerQuestion(self, request):
-        pass
+        surveyId = request.data.get('surveyId')
+        questionTitle = request.data.get('questionTitle')
+        questionType = request.data.get('questionType')
+        essential = request.data.get('isEssential')
+        survey = self.surveyService.getSurveyBySurveyId(surveyId)
+        result = self.surveyService.registerQuestion(survey, questionTitle, questionType, essential)
+        return Response(result, status=status.HTTP_200_OK)
+
 
     def registerSelection(self, request):
         pass
