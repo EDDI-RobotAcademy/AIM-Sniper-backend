@@ -28,3 +28,9 @@ class SurveyRepositoryImpl(SurveyRepository):
         Survey.objects.create(survey_id =surveyId)
         return surveyId
 
+    def findSurvey(self, surveyId):
+        survey = Survey.objects.get(survey_id = surveyId)
+        print('findSurvey -> ', survey)
+        return survey
+
+
