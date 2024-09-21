@@ -8,6 +8,11 @@ class SurveyService(ABC):
     @abstractmethod
     def getSurveyBySurveyId(self, surveyId):
         pass
+
+    @abstractmethod
+    def getQuestionByQuestionId(self, questionId):
+        pass
+
     @abstractmethod
     def registerTitleDescription(self, survey, surveyTitle, surveyDescription):
         pass
@@ -17,9 +22,9 @@ class SurveyService(ABC):
         pass
 
     @abstractmethod
-    def registerSelection(self, selection):
+    def registerSelection(self, question, selection):
         pass
 
     @abstractmethod
-    def readSurveyForm(self):
+    def registerAnswer(self):
         pass

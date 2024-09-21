@@ -27,3 +27,8 @@ class SurveyQuestionRepositoryImpl(SurveyQuestionRepository):
         except Exception as e:
             print('Question 저장 중 오류 발생 : ', e)
             return False
+
+    def findQuestion(self, questionId):
+        question = SurveyQuestion.objects.get(id=questionId)
+        return question
+
