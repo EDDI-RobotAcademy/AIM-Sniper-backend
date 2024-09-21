@@ -21,6 +21,7 @@ class SurveyTitleRepositoryImpl(SurveyTitleRepository):
         try:
             SurveyTitle.objects.create(survey_id=survey, title=surveyTitle)
             return True
+
         except Exception as e:
             print('Title 저장 중 오류 발생 : ', e)
             return False

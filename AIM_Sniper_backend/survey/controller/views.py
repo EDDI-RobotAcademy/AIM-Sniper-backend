@@ -31,6 +31,11 @@ class SurveyView(viewsets.ViewSet):
 
 
     def registerSelection(self, request):
-        pass
+        questionId = request.data.get('questionId')
+        selection = request.data.get('selection')
+        print(f"questionId : {questionId}, selection : {selection}")
+        question = self.surveyService.getQuestionByQuestionId(questionId)
+        result = self.surveyService.registerSelection(question, selection)
+        return Response(result, status=status.HTTP_200_OK)
     def readSurveyForm(self, request):
         print('사용자 전용')

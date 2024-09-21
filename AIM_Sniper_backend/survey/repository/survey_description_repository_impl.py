@@ -22,6 +22,7 @@ class SurveyDescriptionRepositoryImpl(SurveyDescriptionRepository):
         try:
             SurveyDescription.objects.create(survey_id=survey, description=surveyDescription)
             return True
+
         except Exception as e:
             print('Description 저장 중 오류 발생 : ', e)
             return False
