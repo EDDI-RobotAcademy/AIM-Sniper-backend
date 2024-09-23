@@ -40,6 +40,9 @@ class AccountServiceImpl(AccountService):
             self.__profileRepository.updateLastLogin(profile)
             self.__profileRepository.update_login_history(profile)
         return profile
+    def findAccountById(self, accountId):
+        return self.__accountRepository.findById(accountId)
+
     def checkPasswordDuplication(self, email,password):
         account = self.__profileRepository.findByPassword(email,password)
         return account
