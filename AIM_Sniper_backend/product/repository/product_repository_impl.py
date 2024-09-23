@@ -25,3 +25,37 @@ class ProductRepositoryImpl(ProductRepository):
         return Product.objects.all().order_by('productName')
 
 
+    def create(self, productName, productPrice, productCategory, content, productTitleImage):
+        uploadDirectory='../../AIM-Sniper-frontend/src/assets/images/uploadimages'
+        print('업로드된 디렉토리 : ', uploadDirectory)
+        os.makedirs(uploadDirectory, exist_ok=True)
+
+        imagePath = os.path.join(uploadDirectory, productTitleImage.name)
+        with open(imagePath, 'wb+') as destination:
+            for chunk in productTitleImage.chunks():
+                destination.write(chunk)
+        print('이미지 경로: ',imagePath)
+
+
+        product = Product(
+            productName=productName,
+            content=content,
+            productPrice=productPrice,
+            productCategory=productCategory,
+            productTitleImage=productTitleImage.name
+        )
+        product.save()
+        return product
+
+    def findByProdictIdList(self, productIdList):
+        try:
+            return Product.objects.filter(productId__in=productIdList)
+        except Product.DoesNotExist:
+            return None
+
+    def findAllByProductCategory(self, productCategory):
+        try:
+            return Product.objects.filter(productCategory=productCategory)
+        except:
+            return None
+

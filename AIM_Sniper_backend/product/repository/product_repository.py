@@ -6,3 +6,14 @@ class ProductRepository(ABC):
     def list(self):
         pass
 
+    @abstractmethod
+    def create(self, productName, productPrice, productCategory, content, productTitleImage):
+        pass
+
+    @abstractmethod
+    def findByProdictIdList(self, productIdList):
+        pass
+
+    @abstractmethod
+    def findAllByProductCategory(self, productCategory):
+        pass
