@@ -10,3 +10,10 @@ class OrdersService(ABC):
     def createProductOrder(self, account, orderItem):
         pass
 
+    @abstractmethod
+    def getAllOrders(self):
+        pass
+
+    @abstractmethod
+    def findAllByAccountId(self, accountId):
+        pass

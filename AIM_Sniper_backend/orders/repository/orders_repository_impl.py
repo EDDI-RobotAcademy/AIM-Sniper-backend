@@ -24,3 +24,10 @@ class OrdersRepositoryImpl(OrdersRepository):
 
         return orders
 
+    def getAllOrders(self):
+        ordersList = Orders.objects.all()
+
+        return ordersList
+
+    def findAllByAccountId(self, accountId):
+        return Orders.objects.filter(account_id=accountId)

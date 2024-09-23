@@ -6,3 +6,11 @@ class OrdersRepository(ABC):
     def create(self, account):
         pass
 
+    @abstractmethod
+    def getAllOrders(self):
+        pass
+
+    @abstractmethod
+    def findAllByAccountId(self, accountId):
+        pass
+

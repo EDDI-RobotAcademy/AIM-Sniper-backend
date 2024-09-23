@@ -6,3 +6,10 @@ class OrdersItemRepository(ABC):
     def create(self, orders, product, price):
         pass
 
+    @abstractmethod
+    def findAllByOrdersId(self, ordersId):
+        pass
+
+    @abstractmethod
+    def checkDuplication(self, allOrdersItemList, productId):
+        pass
