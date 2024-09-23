@@ -25,15 +25,6 @@ SECRET_KEY = 'django-insecure-y2y!c&fehg39_jx08t-)uz6@d1&)ille@^n$6)5yyt5&xja)qa
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# .env 파일에 개인 IP 설정한 값 가져오기
-load_dotenv()
-
-MY_IP = os.getenv('MY_IP')
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', MY_IP]
-
-
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -47,7 +38,9 @@ INSTALLED_APPS = [
     'django_extensions',
     'kakao_oauth',
     'account',
-    'survey'
+    'survey',
+    'product',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -64,7 +57,9 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 ALLOWED_HOSTS = [ALLOWED_HOST for ALLOWED_HOST in os.getenv('ALLOWED_HOSTS', '').split(',')]
+
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
 
