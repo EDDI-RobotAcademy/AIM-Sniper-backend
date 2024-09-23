@@ -92,6 +92,15 @@ class OrdersView(viewsets.ViewSet):
 
         return JsonResponse(serializedOrdersList, safe=False, status=status.HTTP_200_OK)
 
+    def myOrderItemList(self, request, pk=None):
+        ordersItemList = self.ordersItemRepository.findAllByOrdersId(pk)
+        serializedOrdersItemList = [{'productId': ordersItem.product.productId,
+                                     'productTitleImage': ordersItem.product.productTitleImage,
+                                     'productName': ordersItem.product.productName,
+                                     'productPrice': ordersItem.product.productPrice}
+                                     for ordersItem in ordersItemList]
+
+        return JsonResponse(serializedOrdersItemList, safe=False, status=status.HTTP_200_OK)
 
     def checkOrderItemDuplication(self, request):
         userToken = request.data['payload']['userToken']
