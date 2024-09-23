@@ -11,6 +11,10 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
+    def findByProductId(self, productId):
+        pass
+
+    @abstractmethod
     def findByProdictIdList(self, productIdList):
         pass
 
