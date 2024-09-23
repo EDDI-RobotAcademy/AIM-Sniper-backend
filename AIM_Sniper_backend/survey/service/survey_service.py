@@ -30,5 +30,9 @@ class SurveyService(ABC):
         pass
 
     @abstractmethod
+    def geyServeyById(self, surveyId):
+        pass
+
+    @abstractmethod
     def registerAnswer(self):
         pass

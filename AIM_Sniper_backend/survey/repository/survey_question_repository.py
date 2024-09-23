@@ -8,3 +8,7 @@ class SurveyQuestionRepository(ABC):
     @abstractmethod
     def findQuestion(self, questionId):
         pass
+
+    @abstractmethod
+    def getQuestionsBySurveyId(self, surveyId):
+        pass

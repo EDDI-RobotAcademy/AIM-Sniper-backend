@@ -72,6 +72,22 @@ class SurveyServiceImpl(SurveyService):
     def getSurveyList(self):
         return self.__surveyTitleRepository.getAllTitles()
 
+    def geyServeyById(self, surveyId):
+        surveyTitle = self.__surveyTitleRepository.getTitleBySurveyId(surveyId)
+        surveyDescription = self.__surveyDescriptionRepository.getDescriptionBySurveyId(surveyId)
+        surveyQuestions = self.__surveyQuestionRepository.getQuestionsBySurveyId(surveyId)
+
+        for question in surveyQuestions:
+            if question['questionType'] != 'text':
+                selection = self.__surveySelectionRepository.getSelectionsByQuestionId(question['questionId'])
+                question['selection'] = selection
+
+        surveyForm = {'surveyId': surveyId, 'surveyTitle': surveyTitle,
+                'surveyDescription': surveyDescription, 'surveyQuestions': surveyQuestions}
+
+        print(surveyForm)
+
+        return surveyForm
     def registerAnswer(self):
         print('사용자 전용')
 

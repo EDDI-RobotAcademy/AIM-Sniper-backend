@@ -6,3 +6,7 @@ class SurveyDescriptionRepository(ABC):
     def registerDescription(self, survey, surveyDescription):
         pass
 
+    @abstractmethod
+    def getDescriptionBySurveyId(self, surveyId):
+        pass
+

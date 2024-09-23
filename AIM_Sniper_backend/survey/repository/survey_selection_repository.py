@@ -5,3 +5,7 @@ class SurveySelectionRepository(ABC):
     @abstractmethod
     def registerSelection(self, question, selection):
         pass
+
+    @abstractmethod
+    def getSelectionsByQuestionId(self, questionId):
+        pass

@@ -10,3 +10,7 @@ class SurveyTitleRepository(ABC):
     def getAllTitles(self):
         pass
 
+    @abstractmethod
+    def getTitleBySurveyId(self, surveyId):
+        pass
+

@@ -27,6 +27,12 @@ class SurveyDescriptionRepositoryImpl(SurveyDescriptionRepository):
             print('Description 저장 중 오류 발생 : ', e)
             return False
 
+    def getDescriptionBySurveyId(self, surveyId):
+        description = SurveyDescription.objects.get(survey_id=surveyId)
+        return description.description
+
+
+
 
 
 
