@@ -36,7 +36,10 @@ class SurveyQuestionRepositoryImpl(SurveyQuestionRepository):
         questions = SurveyQuestion.objects.filter(survey_id=surveyId).order_by('id').values_list('id', 'question', 'question_type', 'essential')
         questions = list(questions)
         for i, q in enumerate(questions) :
-            questions[i] = {'questionId': q[0], 'questionTitle': q[1], 'questionType': q[2], 'essential': q[3]}
+            if q[2] == 'checkbox':
+                questions[i] = {'questionId': q[0], 'questionTitle': q[1], 'questionType': q[2], 'essential': q[3], 'answer': []}
+            else :
+                questions[i] = {'questionId': q[0], 'questionTitle': q[1], 'questionType': q[2], 'essential': q[3], 'answer': ''}
 
         return questions
 

@@ -36,4 +36,10 @@ class SurveySelectionRepositoryImpl(SurveySelectionRepository):
 
         return listSelections
 
+    def findSelection(self, selectionId):
+        selection = SurveySelection.objects.get(id=selectionId)
+        return selection
+
+
+
 
