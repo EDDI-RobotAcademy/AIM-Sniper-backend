@@ -27,4 +27,6 @@ urlpatterns = [
     path('survey/', include('survey.urls')),
     path('google_oauth/', include('google_oauth.urls')),
     path('naver_oauth/', include('naver_oauth.urls')),
+    path('product/',include('product.urls')),
+    path('cart/',include('cart.urls')),
 ]
