@@ -44,5 +44,7 @@ class SurveyView(viewsets.ViewSet):
         print('surveytitleList: ', surveyTitleList)
         return Response({'surveyTitleList': surveyTitleList}, status=status.HTTP_200_OK)
 
-    def readSurveyForm(self, request):
-        print('사용자 전용')
+    def readSurveyForm(self, request, pk=None):
+        surveyForm = self.surveyService.geyServeyById(pk)
+        print('surveyId :', pk)
+        return Response(surveyForm, status.HTTP_200_OK)

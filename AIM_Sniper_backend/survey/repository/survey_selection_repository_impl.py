@@ -27,3 +27,13 @@ class SurveySelectionRepositoryImpl(SurveySelectionRepository):
 
         except Exception as e:
             print('Selection 저장 중 오류 발생 : ', e)
+
+    def getSelectionsByQuestionId(self, questionId):
+        selections = SurveySelection.objects.filter(survey_question_id=questionId).order_by('id').values_list('selection')
+        listSelections = []
+        for s in selections :
+            listSelections.append(s[0])
+
+        return listSelections
+
+

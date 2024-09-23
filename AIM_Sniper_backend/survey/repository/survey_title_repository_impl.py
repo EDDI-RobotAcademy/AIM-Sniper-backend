@@ -28,8 +28,13 @@ class SurveyTitleRepositoryImpl(SurveyTitleRepository):
 
     def getAllTitles(self):
         surveyTitleAll = SurveyTitle.objects.all().order_by('survey_id')
-        surveyTitleList = [{'surveyDocumentId': survey.survey_id.id, 'title': survey.title} for survey in surveyTitleAll]
+        surveyTitleList = [{'surveyDocumentId': survey.survey_id.id, 'surveyTitle': survey.title} for survey in surveyTitleAll]
         return surveyTitleList
+
+    def getTitleBySurveyId(self, surveyId):
+        surveyTitle = SurveyTitle.objects.get(survey_id=surveyId)
+
+        return surveyTitle.title
 
 
 
