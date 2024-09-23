@@ -26,5 +26,9 @@ class SurveyService(ABC):
         pass
 
     @abstractmethod
+    def getSurveyList(self):
+        pass
+
+    @abstractmethod
     def registerAnswer(self):
         pass

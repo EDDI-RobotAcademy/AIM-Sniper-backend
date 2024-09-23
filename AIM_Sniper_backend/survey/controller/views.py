@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+
 from survey.service.survey_service_impl import SurveyServiceImpl
 
 class SurveyView(viewsets.ViewSet):
@@ -37,5 +38,11 @@ class SurveyView(viewsets.ViewSet):
         question = self.surveyService.getQuestionByQuestionId(questionId)
         result = self.surveyService.registerSelection(question, selection)
         return Response(result, status=status.HTTP_200_OK)
+
+    def surveyList(self, request):
+        surveyTitleList = self.surveyService.getSurveyList()
+        print('surveytitleList: ', surveyTitleList)
+        return Response({'surveyTitleList': surveyTitleList}, status=status.HTTP_200_OK)
+
     def readSurveyForm(self, request):
         print('사용자 전용')

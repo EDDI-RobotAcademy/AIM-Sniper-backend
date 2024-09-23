@@ -69,6 +69,8 @@ class SurveyServiceImpl(SurveyService):
             print('설문 선택 항목 저장 중 오류 발생 : ', e)
             return False
 
+    def getSurveyList(self):
+        return self.__surveyTitleRepository.getAllTitles()
 
     def registerAnswer(self):
         print('사용자 전용')
