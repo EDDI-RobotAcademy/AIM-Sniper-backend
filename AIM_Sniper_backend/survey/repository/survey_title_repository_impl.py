@@ -26,5 +26,12 @@ class SurveyTitleRepositoryImpl(SurveyTitleRepository):
             print('Title 저장 중 오류 발생 : ', e)
             return False
 
+    def getAllTitles(self):
+        surveyTitleAll = SurveyTitle.objects.all().order_by('survey_id')
+        surveyTitleList = [{'surveyDocumentId': survey.survey_id.id, 'title': survey.title} for survey in surveyTitleAll]
+        return surveyTitleList
+
+
+
 
 

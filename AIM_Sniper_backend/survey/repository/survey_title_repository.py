@@ -6,3 +6,7 @@ class SurveyTitleRepository(ABC):
     def registerTitle(self, survey, surveyTitle):
         pass
 
+    @abstractmethod
+    def getAllTitles(self):
+        pass
+
