@@ -29,4 +29,5 @@ urlpatterns = [
     path('naver_oauth/', include('naver_oauth.urls')),
     path('product/',include('product.urls')),
     path('cart/',include('cart.urls')),
+    path('orders/',include('orders.urls')),
 ]
