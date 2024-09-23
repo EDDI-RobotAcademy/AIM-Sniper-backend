@@ -5,3 +5,7 @@ class ProductService(ABC):
     def list(self):
         pass
 
+    @abstractmethod
+    def createProduct(self, productName, productPrice, productCategory,content, productTitleImage):
+        pass
+
