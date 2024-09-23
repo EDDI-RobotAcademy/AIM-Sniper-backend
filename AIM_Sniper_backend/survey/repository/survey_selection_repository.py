@@ -9,3 +9,7 @@ class SurveySelectionRepository(ABC):
     @abstractmethod
     def getSelectionsByQuestionId(self, questionId):
         pass
+
+    @abstractmethod
+    def findSelection(self, selectionId):
+        pass

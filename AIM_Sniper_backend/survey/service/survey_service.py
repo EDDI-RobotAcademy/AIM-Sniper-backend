@@ -5,6 +5,7 @@ class SurveyService(ABC):
     @abstractmethod
     def createSurveyForm(self):
         pass
+
     @abstractmethod
     def getSurveyBySurveyId(self, surveyId):
         pass
@@ -34,5 +35,5 @@ class SurveyService(ABC):
         pass
 
     @abstractmethod
-    def registerAnswer(self):
+    def saveAnswer(self, answers):
         pass

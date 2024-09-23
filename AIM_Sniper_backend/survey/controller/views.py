@@ -46,5 +46,11 @@ class SurveyView(viewsets.ViewSet):
 
     def readSurveyForm(self, request, pk=None):
         surveyForm = self.surveyService.geyServeyById(pk)
-        print('surveyId :', pk)
+        # print('surveyId :', pk)
         return Response(surveyForm, status.HTTP_200_OK)
+
+    def submitSurvey(self, request):
+        answers = request.data.get('submitForm')
+        result = self.surveyService.saveAnswer(answers)
+
+        return Response(True, status.HTTP_200_OK)

@@ -1,3 +1,4 @@
+from survey.repository.survey_answer_repository_impl import SurveyAnswerRepositoryImpl
 from survey.repository.survey_description_repository_impl import SurveyDescriptionRepositoryImpl
 from survey.repository.survey_question_repository_impl import SurveyQuestionRepositoryImpl
 from survey.repository.survey_repository_impl import SurveyRepositoryImpl
@@ -17,7 +18,7 @@ class SurveyServiceImpl(SurveyService):
             cls.__instance.__surveyDescriptionRepository = SurveyDescriptionRepositoryImpl.getInstance()
             cls.__instance.__surveyQuestionRepository = SurveyQuestionRepositoryImpl.getInstance()
             cls.__instance.__surveySelectionRepository = SurveySelectionRepositoryImpl.getInstance()
-            # cls.__instance.__surveyAnswerRepository = SurveyAnswerRepositoryImpl.getInstance()
+            cls.__instance.__surveyAnswerRepository = SurveyAnswerRepositoryImpl.getInstance()
 
 
         return cls.__instance
@@ -85,11 +86,36 @@ class SurveyServiceImpl(SurveyService):
         surveyForm = {'surveyId': surveyId, 'surveyTitle': surveyTitle,
                 'surveyDescription': surveyDescription, 'surveyQuestions': surveyQuestions}
 
-        print(surveyForm)
-
         return surveyForm
-    def registerAnswer(self):
-        print('사용자 전용')
+
+    def saveAnswer(self, answers):
+        try:
+            for answer in answers:
+                questionId = answer.get('questionId')
+                question = self.__surveyQuestionRepository.findQuestion(questionId)
+
+                if answer['questionType'] == 'text':
+                    answer = answer.get('answer')
+                    textAnswer = self.__surveyAnswerRepository.saveTextAnswer(question, answer)
+
+                elif answer['questionType'] == 'radio':
+                    selectionId = answer.get('selectionId')
+                    selection = self.__surveySelectionRepository.findSelection(selectionId)
+                    checkboxAnswer = self.__surveyAnswerRepository.saveRadioAnswer(question, selection)
+
+                elif answer['questionType'] == 'checkbox':
+                    selectionIdArray = answer.get('selectionIdArray')
+                    selectionIdArray = \
+                        [self.__surveySelectionRepository.findSelection(selection) for selection in selectionIdArray]
+                    radioAnswer = self.__surveyAnswerRepository.saveCheckboxAnswer(question, selectionIdArray)
+
+            return textAnswer and radioAnswer and checkboxAnswer
+
+        except:
+            return False
+
+
+
 
 
 
