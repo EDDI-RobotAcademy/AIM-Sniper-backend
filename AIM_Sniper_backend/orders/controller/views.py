@@ -70,6 +70,28 @@ class OrdersView(viewsets.ViewSet):
             print("주문 과정 중 문제 발생:", e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def myOrderList(self, request):
+        userToken = request.data.get('userToken')
+        print('userToken:', userToken)
+        accountId = self.redisService.getValueByKey(userToken)
+        ordersList = self.ordersService.findAllByAccountId(accountId)
+        serializedOrdersList = []
+
+        for orders in ordersList:
+            totalPrice = 0
+            ordersItemList = self.ordersItemRepository.findAllByOrdersId(orders.id)
+            for ordersItem in ordersItemList:
+                totalPrice += ordersItem.price
+
+            serializedOrdersList.append(
+                {'ordersId': orders.id,
+                 'createdDate': orders.createdDate,
+                 'totalPrice': totalPrice,
+                 'totalQuantity': len(ordersItemList)
+                 })
+
+        return JsonResponse(serializedOrdersList, safe=False, status=status.HTTP_200_OK)
+
 
     def checkOrderItemDuplication(self, request):
         userToken = request.data['payload']['userToken']

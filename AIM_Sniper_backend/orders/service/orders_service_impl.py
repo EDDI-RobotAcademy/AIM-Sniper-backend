@@ -55,3 +55,8 @@ class OrdersServiceImpl(OrdersService):
             print('Error creating order:', e)
             raise e
 
+    def getAllOrders(self):
+        return self.__ordersRepository.getAllOrders()
+
+    def findAllByAccountId(self, accountId):
+        return self.__ordersRepository.findAllByAccountId(accountId)

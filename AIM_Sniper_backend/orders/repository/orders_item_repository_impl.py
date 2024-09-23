@@ -21,3 +21,12 @@ class OrdersItemRepositoryImpl(OrdersItemRepository):
         orderItem = OrdersItem(orders=orders, product=product, price=price)
         orderItem.save()
 
+    def findAllByOrdersId(self, ordersId):
+        return OrdersItem.objects.filter(orders_id=ordersId)
+
+    def checkDuplication(self, allOrdersItemList, productId):
+        for ordersItemList in allOrdersItemList:
+            for ordersItem in ordersItemList:
+                if ordersItem.product.productId == productId:
+                    return True
+        return False
