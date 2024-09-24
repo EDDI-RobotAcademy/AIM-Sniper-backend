@@ -94,6 +94,17 @@ class AccountView(viewsets.ViewSet):
                     gender=gender,
                     birthyear=birthyear,
                 )
+            elif email == "aim-sniper@kakao.com":
+                account = self.accountService.registerAccount(
+                    loginType=loginType,
+                    roleType="ADMIN",
+                    nickname=nickname,
+                    email=email,
+                    password=None,
+                    salt=None,
+                    gender=gender,
+                    birthyear=birthyear,
+                )
             else:
                 account = self.accountService.registerAccount(
                     loginType=loginType,
