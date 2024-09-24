@@ -13,6 +13,6 @@ urlpatterns = [
     path('register-question', SurveyView.as_view({'post': 'registerQuestion'}), name='survey-question'),
     path('register-selection', SurveyView.as_view({'post': 'registerSelection'}), name='survey-selection'),
     path('survey-title-list', SurveyView.as_view({'get': 'surveyList'}), name='survey-title-list'),
-    path('read-survey-form/<int:pk>', SurveyView.as_view({'get': 'readSurveyForm'}), name='read-survey-form'),
+    path('read-survey-form/<str:randomString>', SurveyView.as_view({'get': 'readSurveyForm'}), name='read-survey-form'),
     path('submit-survey', SurveyView.as_view({'post': 'submitSurvey'}), name='submit-survey'),
 ]

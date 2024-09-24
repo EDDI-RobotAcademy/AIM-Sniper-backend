@@ -30,10 +30,10 @@ class SurveyServiceImpl(SurveyService):
 
         return cls.__instance
 
-    def createSurveyForm(self):
+    def createSurveyForm(self, randomString):
         maxId = self.__surveyRepository.getMaxId()
-        surveyId = self.__surveyRepository.registerSurvey(maxId+1)
-        return surveyId
+        self.__surveyRepository.registerSurvey(randomString)
+        return maxId + 1
 
     def getSurveyBySurveyId(self, surveyId):
         survey = self.__surveyRepository.findSurvey(surveyId)
@@ -72,6 +72,9 @@ class SurveyServiceImpl(SurveyService):
 
     def getSurveyList(self):
         return self.__surveyTitleRepository.getAllTitles()
+
+    def getRandomStringList(self):
+        return self.__surveyRepository.getAllRandomString()
 
     def geyServeyById(self, surveyId):
         surveyTitle = self.__surveyTitleRepository.getTitleBySurveyId(surveyId)
@@ -113,6 +116,9 @@ class SurveyServiceImpl(SurveyService):
 
         except:
             return False
+
+    def getSurveyIdByRandomString(self, randomString):
+        return self.__surveyRepository.findSurveyIdByRandomString(randomString)
 
 
 

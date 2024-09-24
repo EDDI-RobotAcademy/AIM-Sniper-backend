@@ -7,7 +7,8 @@ class SurveyView(viewsets.ViewSet):
     surveyService = SurveyServiceImpl.getInstance()
 
     def createSurveyForm(self, request):
-        surveyId = self.surveyService.createSurveyForm()
+        randomString = request.data.get('randomString')
+        surveyId = self.surveyService.createSurveyForm(randomString)
         return Response(surveyId, status=status.HTTP_200_OK)
 
     def registerTitleDescription(self, request):
@@ -41,11 +42,16 @@ class SurveyView(viewsets.ViewSet):
 
     def surveyList(self, request):
         surveyTitleList = self.surveyService.getSurveyList()
-        print('surveytitleList: ', surveyTitleList)
-        return Response({'surveyTitleList': surveyTitleList}, status=status.HTTP_200_OK)
+        randomStringList = self.surveyService.getRandomStringList()
+        combinedList = []
+        for survey, random in zip(surveyTitleList, randomStringList):
+            combinedItem = {**survey, **random}
+            combinedList.append(combinedItem)
+        return Response({'surveyTitleList': combinedList}, status=status.HTTP_200_OK)
 
-    def readSurveyForm(self, request, pk=None):
-        surveyForm = self.surveyService.geyServeyById(pk)
+    def readSurveyForm(self, request, randomString=None):
+        surveyId = self.surveyService.getSurveyIdByRandomString(randomString)
+        surveyForm = self.surveyService.geyServeyById(surveyId)
         # print('surveyId :', pk)
         return Response(surveyForm, status.HTTP_200_OK)
 
