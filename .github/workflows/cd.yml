@@ -101,7 +101,7 @@ jobs:
         aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr $IP_ADDRESS/32
 
     - name: Deploy to Production
-      uses: appleboy/ssh-action@v0.1.10
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST_IP }}
         username: ec2-user
