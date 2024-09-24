@@ -67,9 +67,16 @@ jobs:
         echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
         echo "KAKAO_TOKEN_REQUEST_URI=${{ secrets.KAKAO_TOKEN_REQUEST_URI }}" >> .env
         echo "KAKAO_USERINFO_REQUEST_URI=${{ secrets.KAKAO_USERINFO_REQUEST_URI }}" >> .env
+        echo "GOOGLE_LOGIN_URL=${{ secrets.GOOGLE_LOGIN_URL }}" >> .env
+        echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+        echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
+        echo "GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}" >> .env
+        echo "GOOGLE_TOKEN_REQUEST_URI=${{ secrets.GOOGLE_TOKEN_REQUEST_URI }}" >> .env
+        echo "GOOGLE_USERINFO_REQUEST_URI=${{ secrets.GOOGLE_USERINFO_REQUEST_URI }}" >> .env
         echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
         echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
         echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
+        echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env
 
     - name: Wait for MySQL to be ready
       working-directory: ./AIM_Sniper_backend
