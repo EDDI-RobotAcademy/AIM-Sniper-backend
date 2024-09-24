@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class SurveyService(ABC):
     @abstractmethod
-    def createSurveyForm(self):
+    def createSurveyForm(self, randomString):
         pass
 
     @abstractmethod
@@ -31,9 +31,17 @@ class SurveyService(ABC):
         pass
 
     @abstractmethod
+    def getRandomStringList(self):
+        pass
+
+    @abstractmethod
     def geyServeyById(self, surveyId):
         pass
 
     @abstractmethod
     def saveAnswer(self, answers):
+        pass
+
+    @abstractmethod
+    def getSurveyIdByRandomString(self, randomString):
         pass
