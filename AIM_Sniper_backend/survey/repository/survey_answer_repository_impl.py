@@ -17,27 +17,39 @@ class SurveyAnswerRepositoryImpl(SurveyAnswerRepository):
 
         return cls.__instance
 
-    def saveTextAnswer(self,  question, answer):
+    # if accountId is not None:
+    #     accountId = self.__accountRepository.findById(accountId)
+    #     self.__surveyAnswerRepository.saveAccountId(accountId)
+    def saveTextAnswer(self,  question, answer, account):
         try:
-            SurveyAnswer.objects.create(survey_question_id=question, answer=answer)
+            if account is not None:
+                SurveyAnswer.objects.create(survey_question_id=question, answer=answer, account=account)
+            else:
+                SurveyAnswer.objects.create(survey_question_id=question, answer=answer)
             return True
         except Exception as e :
             print('text answer 저장 과정에서 오류 발생! : ', e)
             return False
 
-    def saveRadioAnswer(self, question, selectionId):
+    def saveRadioAnswer(self, question, selectionId, account):
         try:
-            SurveyAnswer.objects.create(survey_question_id=question, survey_selection_id=selectionId)
+            if account is not None:
+                SurveyAnswer.objects.create(survey_question_id=question, survey_selection_id=selectionId, account=account)
+            else:
+                SurveyAnswer.objects.create(survey_question_id=question, survey_selection_id=selectionId)
             return True
         except Exception as e :
             print('radio answer 저장 과정에서 오류 발생! : ', e)
             return False
 
 
-    def saveCheckboxAnswer(self, question, selectionIdArray):
+    def saveCheckboxAnswer(self, question, selectionIdArray, account):
         try:
             for selectionId in selectionIdArray:
-                SurveyAnswer.objects.create(survey_question_id=question, survey_selection_id=selectionId)
+                if account is not None:
+                    SurveyAnswer.objects.create(survey_question_id=question, survey_selection_id=selectionId, account=account)
+                else:
+                    SurveyAnswer.objects.create(survey_question_id=question, survey_selection_id=selectionId)
             return True
         except Exception as e :
             print('checkbox answer 저장 과정에서 오류 발생!: ', e)

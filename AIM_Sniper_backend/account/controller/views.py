@@ -1,6 +1,4 @@
 import hashlib
-import os
-import uuid
 import random
 import string
 
@@ -249,4 +247,16 @@ class AccountView(viewsets.ViewSet):
         profile.password = newpassword1
         profile.save()
         print(f"newPassword: {profile.password}")
-        return Response(profile.password,status=status.HTTP_200_OK)
+        return Response(profile.password, status=status.HTTP_200_OK)
+
+    def getAccountId(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response(None, status=status.HTTP_200_OK)
+        profile = self.profileRepository.findByEmail(email)
+        if profile is None:
+            return Response(
+                {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
+            )  # 에러 처리 추가
+        accountId = profile.account_id
+        return Response({"accountId" : accountId}, status=status.HTTP_200_OK)

@@ -56,7 +56,14 @@ class SurveyView(viewsets.ViewSet):
         return Response(surveyForm, status.HTTP_200_OK)
 
     def submitSurvey(self, request):
-        answers = request.data.get('submitForm')
-        result = self.surveyService.saveAnswer(answers)
+        try:
+            answers = request.data.get('submitForm')
+            accountId = request.data.get('accountId')
+            print("answers: ", answers, 'accountId :', accountId)
 
-        return Response(True, status.HTTP_200_OK)
+            self.surveyService.saveAnswer(answers, accountId)
+
+            return Response(True, status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response(False, status.HTTP_400_BAD_REQUEST)
