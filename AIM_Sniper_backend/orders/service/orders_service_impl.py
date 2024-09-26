@@ -46,8 +46,8 @@ class OrdersServiceImpl(OrdersService):
             orders = self.__ordersRepository.create(account)
             self.__ordersItemRepository.create(
                 orders,
-                orderItem['product'],
-                orderItem['productPrice'],
+                orderItem['company_report'],
+                orderItem['companyReportPrice'],
             )
 
             return orders.id

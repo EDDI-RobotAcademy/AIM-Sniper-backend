@@ -1,3 +1,4 @@
+from account.repository.account_repository_impl import AccountRepositoryImpl
 from survey.repository.survey_answer_repository_impl import SurveyAnswerRepositoryImpl
 from survey.repository.survey_description_repository_impl import SurveyDescriptionRepositoryImpl
 from survey.repository.survey_question_repository_impl import SurveyQuestionRepositoryImpl
@@ -19,6 +20,7 @@ class SurveyServiceImpl(SurveyService):
             cls.__instance.__surveyQuestionRepository = SurveyQuestionRepositoryImpl.getInstance()
             cls.__instance.__surveySelectionRepository = SurveySelectionRepositoryImpl.getInstance()
             cls.__instance.__surveyAnswerRepository = SurveyAnswerRepositoryImpl.getInstance()
+            cls.__instance.__accountRepository = AccountRepositoryImpl().getInstance()
 
 
         return cls.__instance
@@ -91,31 +93,32 @@ class SurveyServiceImpl(SurveyService):
 
         return surveyForm
 
-    def saveAnswer(self, answers):
+    def saveAnswer(self, answers, account):
         try:
+            if account is not None:
+                account = self.__accountRepository.findById(account)
+
             for answer in answers:
                 questionId = answer.get('questionId')
                 question = self.__surveyQuestionRepository.findQuestion(questionId)
 
                 if answer['questionType'] == 'text':
                     answer = answer.get('answer')
-                    textAnswer = self.__surveyAnswerRepository.saveTextAnswer(question, answer)
+                    textAnswer = self.__surveyAnswerRepository.saveTextAnswer(question, answer, account)
 
                 elif answer['questionType'] == 'radio':
                     selectionId = answer.get('selectionId')
                     selection = self.__surveySelectionRepository.findSelection(selectionId)
-                    checkboxAnswer = self.__surveyAnswerRepository.saveRadioAnswer(question, selection)
+                    checkboxAnswer = self.__surveyAnswerRepository.saveRadioAnswer(question, selection, account)
 
                 elif answer['questionType'] == 'checkbox':
                     selectionIdArray = answer.get('selectionIdArray')
                     selectionIdArray = \
                         [self.__surveySelectionRepository.findSelection(selection) for selection in selectionIdArray]
-                    radioAnswer = self.__surveyAnswerRepository.saveCheckboxAnswer(question, selectionIdArray)
+                    radioAnswer = self.__surveyAnswerRepository.saveCheckboxAnswer(question, selectionIdArray, account)
 
-            return textAnswer and radioAnswer and checkboxAnswer
-
-        except:
-            return False
+        except Exception as e:
+            print('답변 저장중 오류 발생: ', {e})
 
     def getSurveyIdByRandomString(self, randomString):
         return self.__surveyRepository.findSurveyIdByRandomString(randomString)

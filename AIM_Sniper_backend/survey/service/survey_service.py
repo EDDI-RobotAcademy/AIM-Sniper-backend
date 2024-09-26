@@ -39,7 +39,7 @@ class SurveyService(ABC):
         pass
 
     @abstractmethod
-    def saveAnswer(self, answers):
+    def saveAnswer(self, answers, accountId):
         pass
 
     @abstractmethod

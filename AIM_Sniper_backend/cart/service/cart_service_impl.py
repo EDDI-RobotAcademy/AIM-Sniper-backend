@@ -2,7 +2,7 @@ from account.repository.account_repository_impl import AccountRepositoryImpl
 from cart.repository.cart_item_repository_impl import CartItemRepositoryImpl
 from cart.repository.cart_repository_impl import CartRepositoryImpl
 from cart.service.cart_service import CartService
-from product.repository.product_repository_impl import ProductRepositoryImpl
+from company_report.repository.companyReport_repository_impl import CompanyReportRepositoryImpl
 
 
 class CartServiceImpl(CartService):
@@ -12,7 +12,7 @@ class CartServiceImpl(CartService):
         if cls.__instance is None:
             cls.__instance = super().__new__(cls)
             cls.__instance.__cartRepository = CartRepositoryImpl.getInstance()
-            cls.__instance.__productRepository = ProductRepositoryImpl.getInstance()
+            cls.__instance.__productRepository = CompanyReportRepositoryImpl.getInstance()
             cls.__instance.__accountRepository = AccountRepositoryImpl.getInstance()
             cls.__instance.__cartItemRepository = CartItemRepositoryImpl.getInstance()
 
@@ -34,8 +34,8 @@ class CartServiceImpl(CartService):
 
         print("기존 장바구니 사용")
 
-        productId = cartData.get('productId')
-        cartItemList = self.__cartItemRepository.findAllByProductId(productId)
+        companyReportId = cartData.get('companyReportId')
+        cartItemList = self.__cartItemRepository.findAllByProductId(companyReportId)
 
         cartItem = None
         for item in cartItemList:
@@ -46,7 +46,7 @@ class CartServiceImpl(CartService):
                 break
         if cartItem is None:
             print("신규 상품 추가")
-            product = self.__productRepository.findByProductId(productId)
+            product = self.__productRepository.findByCompanyReportId(companyReportId)
             self.__cartItemRepository.register(cartData, cart, product)
 
     def cartList(self, accountId):
@@ -61,10 +61,10 @@ class CartServiceImpl(CartService):
         for cartItem in cartItemList:
             cartItemResponseForm = {
                 'cartItemId': cartItem.cartItemId,
-                'productName': cartItem.product.productName,
-                'productPrice': cartItem.product.productPrice,
-                'productTitleImage': cartItem.product.productTitleImage,
-                'productId': cartItem.product.productId,
+                'companyReportName': cartItem.product.companyReportName,
+                'companyReportPrice': cartItem.product.companyReportPrice,
+                'companyReportTitleImage': cartItem.product.companyReportTitleImage,
+                'companyReportId': cartItem.product.companyReportId,
                 'quantity': cartItem.quantity,
             }
             cartItemListResponseForm.append(cartItemResponseForm)

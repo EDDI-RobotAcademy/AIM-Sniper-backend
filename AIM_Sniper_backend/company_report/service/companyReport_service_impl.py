@@ -1,0 +1,30 @@
+import random
+
+from company_report.repository.companyReport_repository_impl import CompanyReportRepositoryImpl
+from company_report.service.companyReport_service import CompanyReportService
+
+class CompanyReportServiceImpl(CompanyReportService):
+    __instance = None
+
+    def __new__(cls):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+            cls.__instance.__companyReportRepository = CompanyReportRepositoryImpl.getInstance()
+
+        return cls.__instance
+
+    @classmethod
+    def getInstance(cls):
+        if cls.__instance is None:
+            cls.__instance = cls()
+
+        return cls.__instance
+
+    def list(self):
+        return self.__companyReportRepository.list()
+
+    def createCompanyReport(self, companyReportName, companyReportPrice, companyReportCategory, content, companyReportTitleImage):
+        return self.__companyReportRepository.create(companyReportName, companyReportPrice, companyReportCategory,content, companyReportTitleImage)
+
+    def readCompanyReport(self, companyReportId):
+        return self.__companyReportRepository.findByCompanyReportId(companyReportId)

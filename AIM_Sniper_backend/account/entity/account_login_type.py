@@ -6,6 +6,7 @@ class AccountLoginType(models.Model):
         KAKAO = 'KAKAO', 'Kakao'
         GENERAL = 'NORMAL', 'normal'
         GOOGLE = 'GOOGLE', 'google'
+        NAVER = 'NAVER','naver'
 
     loginType = models.CharField(max_length=10, choices=LoginType.choices, unique=True)
 
