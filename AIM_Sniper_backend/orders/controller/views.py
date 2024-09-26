@@ -54,13 +54,13 @@ class OrdersView(viewsets.ViewSet):
                 raise ValueError('Invalid email')
 
             account = self.accountService.findAccountById(accountId.account_id)
-            productId = data.get('productId')
-            product = self.productRepository.findByProductId(productId)
-            productPrice = data.get('productPrice')
+            companyReportId = data.get('companyReportId')
+            companyReport = self.productRepository.findByCompanyReportId(companyReportId)
+            companyReportPrice = data.get('companyReportPrice')
             quantity = 1
 
-            orderItem = {"company_report": product,
-                         "productPrice": productPrice,
+            orderItem = {"company_report": companyReport,
+                         "companyReportPrice": companyReportPrice,
                          "quantity": quantity}
 
             orderId = self.ordersService.createProductOrder(account, orderItem)
@@ -94,22 +94,22 @@ class OrdersView(viewsets.ViewSet):
 
     def myOrderItemList(self, request, pk=None):
         ordersItemList = self.ordersItemRepository.findAllByOrdersId(pk)
-        serializedOrdersItemList = [{'productId': ordersItem.product.productId,
-                                     'productTitleImage': ordersItem.product.productTitleImage,
-                                     'productName': ordersItem.product.productName,
-                                     'productPrice': ordersItem.product.productPrice}
+        serializedOrdersItemList = [{'companyReportId': ordersItem.product.companyReportId,
+                                     'companyReportTitleImage': ordersItem.product.companyReportTitleImage,
+                                     'companyReportName': ordersItem.product.companyReportName,
+                                     'companyReportPrice': ordersItem.product.companyReportPrice}
                                      for ordersItem in ordersItemList]
 
         return JsonResponse(serializedOrdersItemList, safe=False, status=status.HTTP_200_OK)
 
     def checkOrderItemDuplication(self, request):
         email = request.data['payload']['email']
-        productId = request.data['payload']['productId']
+        companyReportId = request.data['payload']['companyReportId']
 
         accountId = self.profileRepository.findByEmail(email)
         ordersList = self.ordersService.findAllByAccountId(accountId.account_id)
         ordersIdList = [orders.id for orders in ordersList]
         allOrdersItemList = [self.ordersItemRepository.findAllByOrdersId(ordersId) for ordersId in ordersIdList]
-        isDuplicate = self.ordersItemRepository.checkDuplication(allOrdersItemList, productId)
+        isDuplicate = self.ordersItemRepository.checkDuplication(allOrdersItemList, companyReportId)
         print(f"isDuplicate: {isDuplicate}")
         return Response(isDuplicate, status=status.HTTP_200_OK)

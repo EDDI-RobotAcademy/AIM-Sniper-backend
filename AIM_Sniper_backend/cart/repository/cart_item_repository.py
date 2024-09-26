@@ -11,11 +11,11 @@ class CartItemRepository(ABC):
         pass
 
     @abstractmethod
-    def findByProductId(self, productId):
+    def findByProductId(self, companyReportId):
         pass
 
     @abstractmethod
-    def findAllByProductId(self, productId):
+    def findAllByProductId(self, companyReportId):
         pass
 
     @abstractmethod
@@ -27,6 +27,6 @@ class CartItemRepository(ABC):
         pass
 
     @abstractmethod
-    def checkDuplication(self, cartItemList, productId):
+    def checkDuplication(self, cartItemList, companyReportId):
         pass
 

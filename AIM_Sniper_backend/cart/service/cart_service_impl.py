@@ -34,8 +34,8 @@ class CartServiceImpl(CartService):
 
         print("기존 장바구니 사용")
 
-        productId = cartData.get('productId')
-        cartItemList = self.__cartItemRepository.findAllByProductId(productId)
+        companyReportId = cartData.get('companyReportId')
+        cartItemList = self.__cartItemRepository.findAllByProductId(companyReportId)
 
         cartItem = None
         for item in cartItemList:
@@ -46,7 +46,7 @@ class CartServiceImpl(CartService):
                 break
         if cartItem is None:
             print("신규 상품 추가")
-            product = self.__productRepository.findByProductId(productId)
+            product = self.__productRepository.findByCompanyReportId(companyReportId)
             self.__cartItemRepository.register(cartData, cart, product)
 
     def cartList(self, accountId):
@@ -61,10 +61,10 @@ class CartServiceImpl(CartService):
         for cartItem in cartItemList:
             cartItemResponseForm = {
                 'cartItemId': cartItem.cartItemId,
-                'productName': cartItem.product.productName,
-                'productPrice': cartItem.product.productPrice,
-                'productTitleImage': cartItem.product.productTitleImage,
-                'productId': cartItem.product.productId,
+                'companyReportName': cartItem.product.companyReportName,
+                'companyReportPrice': cartItem.product.companyReportPrice,
+                'companyReportTitleImage': cartItem.product.companyReportTitleImage,
+                'companyReportId': cartItem.product.companyReportId,
                 'quantity': cartItem.quantity,
             }
             cartItemListResponseForm.append(cartItemResponseForm)

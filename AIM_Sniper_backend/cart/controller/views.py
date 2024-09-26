@@ -50,10 +50,10 @@ class CartView(viewsets.ViewSet):
     def removeCartItem(self, request):
         data = request.data
 
-        if list(data.keys())[0] == 'productId':
+        if list(data.keys())[0] == 'companyReportId':
             cartItemList = CartItem.objects.all()
             for cartItem in cartItemList:
-                if cartItem.product.productId == data['productId'][0]:
+                if cartItem.product.companyReportId == data['companyReportId'][0]:
                     self.cartService.removeCartItem([cartItem.cartItemId])
 
         if list(data.keys())[0] == 'CartItemId':
@@ -63,13 +63,13 @@ class CartView(viewsets.ViewSet):
 
     def checkCartItemDuplication(self, request):
         email = request.data['payload']['email']
-        productId = request.data['payload']['productId']
+        companyReportId = request.data['payload']['companyReportId']
 
         accountId = self.profileRepository.findByEmail(email)
         account = self.accountService.findAccountById(accountId.account_id)
         cart = self.cartRepository.findByAccount(account)
         cartItemList = self.cartItemRepository.findByCart(cart)
-        isDuplicate = self.cartItemRepository.checkDuplication(cartItemList, productId)
+        isDuplicate = self.cartItemRepository.checkDuplication(cartItemList, companyReportId)
         print(f"isDuplicate: {isDuplicate}")
         return Response(isDuplicate, status=status.HTTP_200_OK)
 
