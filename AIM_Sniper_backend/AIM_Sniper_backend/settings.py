@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'survey',
     'company_report',
     'cart',
-    'orders'
+    'orders',
+    'marketing',
 ]
 
 MIDDLEWARE = [
