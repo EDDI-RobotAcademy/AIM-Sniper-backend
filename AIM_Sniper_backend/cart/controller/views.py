@@ -2,33 +2,34 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
+from account.repository.profile_repository_impl import ProfileRepositoryImpl
 from account.service.account_service_impl import AccountServiceImpl
 from cart.entity.cart_item import CartItem
 from cart.repository.cart_item_repository_impl import CartItemRepositoryImpl
 from cart.repository.cart_repository_impl import CartRepositoryImpl
 from cart.service.cart_service_impl import CartServiceImpl
-from redis_service.service.redis_service_impl import RedisServiceImpl
 
 
 class CartView(viewsets.ViewSet):
     cartService = CartServiceImpl.getInstance()
     cartRepository = CartRepositoryImpl.getInstance()
     cartItemRepository = CartItemRepositoryImpl.getInstance()
-    redisService = RedisServiceImpl.getInstance()
+    profileRepository = ProfileRepositoryImpl.getInstance()
     accountService = AccountServiceImpl.getInstance()
 
     def cartItemList(self, request):
         data = request.data
-        userToken = data.get('userToken')
+        email = data.get('email')
 
-        if not userToken:
+        if not email:
             return Response({'error': 'User token is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-        accountId = self.redisService.getValueByKey(userToken)
+        accountId = self.profileRepository.findByEmail(email)
+        print(accountId.account_id)
         if not accountId:
             return Response({'error': 'Invalid user token'}, status=status.HTTP_400_BAD_REQUEST)
 
-        cartItemListResponseForm = self.cartService.cartList(accountId)
+        cartItemListResponseForm = self.cartService.cartList(accountId.account_id)
         return Response(cartItemListResponseForm, status=status.HTTP_200_OK)
 
     def cartRegister(self, request):
@@ -36,10 +37,10 @@ class CartView(viewsets.ViewSet):
             data = request.data
             print('data:', data)
 
-            userToken = data.get('userToken')
-            accountId = self.redisService.getValueByKey(userToken)
+            email = data.get('email')
+            accountId = self.profileRepository.findByEmail(email)
 
-            self.cartService.cartRegister(data, accountId)
+            self.cartService.cartRegister(data, accountId.account_id)
             return Response(status=status.HTTP_200_OK)
 
         except Exception as e:
@@ -61,11 +62,11 @@ class CartView(viewsets.ViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def checkCartItemDuplication(self, request):
-        userToken = request.data['payload']['userToken']
+        email = request.data['payload']['email']
         productId = request.data['payload']['productId']
 
-        accountId = self.redisService.getValueByKey(userToken)
-        account = self.accountService.findAccountById(accountId)
+        accountId = self.profileRepository.findByEmail(email)
+        account = self.accountService.findAccountById(accountId.account_id)
         cart = self.cartRepository.findByAccount(account)
         cartItemList = self.cartItemRepository.findByCart(cart)
         isDuplicate = self.cartItemRepository.checkDuplication(cartItemList, productId)
