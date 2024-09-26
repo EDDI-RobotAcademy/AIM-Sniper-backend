@@ -7,7 +7,7 @@ from account.service.account_service_impl import AccountServiceImpl
 from orders.repository.orders_item_repository_impl import OrdersItemRepositoryImpl
 from orders.service.orders_service_impl import OrdersServiceImpl
 from redis_service.service.redis_service_impl import RedisServiceImpl
-from product.repository.product_repository_impl import ProductRepositoryImpl
+from company_report.repository.companyReport_repository_impl import CompanyReportRepositoryImpl
 
 from datetime import datetime
 
@@ -15,7 +15,7 @@ class OrdersView(viewsets.ViewSet):
     ordersService = OrdersServiceImpl.getInstance()
     redisService = RedisServiceImpl.getInstance()
     accountService = AccountServiceImpl.getInstance()
-    productRepository = ProductRepositoryImpl.getInstance()
+    productRepository = CompanyReportRepositoryImpl.getInstance()
     profileRepository = ProfileRepositoryImpl.getInstance()
     ordersItemRepository = OrdersItemRepositoryImpl.getInstance()
 
@@ -59,7 +59,7 @@ class OrdersView(viewsets.ViewSet):
             productPrice = data.get('productPrice')
             quantity = 1
 
-            orderItem = {"product": product,
+            orderItem = {"company_report": product,
                          "productPrice": productPrice,
                          "quantity": quantity}
 

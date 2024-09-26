@@ -1,13 +1,13 @@
 from django.db import models
 
 from cart.entity.cart import Cart
-from product.entity.models import Product
+from company_report.entity.models import CompanyReport
 
 
 class CartItem(models.Model):
     cartItemId = models.AutoField(primary_key=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(CompanyReport, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
