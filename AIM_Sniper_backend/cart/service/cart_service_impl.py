@@ -2,7 +2,7 @@ from account.repository.account_repository_impl import AccountRepositoryImpl
 from cart.repository.cart_item_repository_impl import CartItemRepositoryImpl
 from cart.repository.cart_repository_impl import CartRepositoryImpl
 from cart.service.cart_service import CartService
-from product.repository.product_repository_impl import ProductRepositoryImpl
+from company_report.repository.companyReport_repository_impl import CompanyReportRepositoryImpl
 
 
 class CartServiceImpl(CartService):
@@ -12,7 +12,7 @@ class CartServiceImpl(CartService):
         if cls.__instance is None:
             cls.__instance = super().__new__(cls)
             cls.__instance.__cartRepository = CartRepositoryImpl.getInstance()
-            cls.__instance.__productRepository = ProductRepositoryImpl.getInstance()
+            cls.__instance.__productRepository = CompanyReportRepositoryImpl.getInstance()
             cls.__instance.__accountRepository = AccountRepositoryImpl.getInstance()
             cls.__instance.__cartItemRepository = CartItemRepositoryImpl.getInstance()
 
