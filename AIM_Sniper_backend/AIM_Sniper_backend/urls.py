@@ -30,4 +30,5 @@ urlpatterns = [
     path('company_report/',include('company_report.urls')),
     path('cart/',include('cart.urls')),
     path('orders/',include('orders.urls')),
+    path('marketing/',include('marketing.urls')),
 ]
