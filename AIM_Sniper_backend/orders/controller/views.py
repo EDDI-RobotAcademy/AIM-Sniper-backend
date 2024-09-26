@@ -24,13 +24,13 @@ class OrdersView(viewsets.ViewSet):
             data = request.data
             print('data:', data)
 
-            userToken = data.get('userToken')
+            email = data.get('email')
 
-            accountId = self.redisService.getValueByKey(userToken)
+            accountId = self.profileRepository.findByEmail(email)
             if not accountId:
-                raise ValueError('Invalid userToken')
+                raise ValueError('Invalid email')
 
-            account = self.accountService.findAccountById(accountId)
+            account = self.accountService.findAccountById(accountId.account_id)
 
             orderItemList = data.get('items')
             print(f"orderItemList: {orderItemList}")
@@ -47,13 +47,13 @@ class OrdersView(viewsets.ViewSet):
             data = request.data
             print('data:', data)
 
-            userToken = data.get('userToken')
-            accountId = self.redisService.getValueByKey(userToken)
+            email = data.get('email')
+            accountId = self.profileRepository.findByEmail(email)
 
             if not accountId:
-                raise ValueError('Invalid userToken')
+                raise ValueError('Invalid email')
 
-            account = self.accountService.findAccountById(accountId)
+            account = self.accountService.findAccountById(accountId.account_id)
             productId = data.get('productId')
             product = self.productRepository.findByProductId(productId)
             productPrice = data.get('productPrice')
@@ -71,10 +71,10 @@ class OrdersView(viewsets.ViewSet):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def myOrderList(self, request):
-        userToken = request.data.get('userToken')
-        print('userToken:', userToken)
-        accountId = self.redisService.getValueByKey(userToken)
-        ordersList = self.ordersService.findAllByAccountId(accountId)
+        email = request.data.get('email')
+        print('email:', email)
+        accountId = self.profileRepository.findByEmail(email)
+        ordersList = self.ordersService.findAllByAccountId(accountId.account_id)
         serializedOrdersList = []
 
         for orders in ordersList:
@@ -103,11 +103,11 @@ class OrdersView(viewsets.ViewSet):
         return JsonResponse(serializedOrdersItemList, safe=False, status=status.HTTP_200_OK)
 
     def checkOrderItemDuplication(self, request):
-        userToken = request.data['payload']['userToken']
+        email = request.data['payload']['email']
         productId = request.data['payload']['productId']
 
-        accountId = self.redisService.getValueByKey(userToken)
-        ordersList = self.ordersService.findAllByAccountId(accountId)
+        accountId = self.profileRepository.findByEmail(email)
+        ordersList = self.ordersService.findAllByAccountId(accountId.account_id)
         ordersIdList = [orders.id for orders in ordersList]
         allOrdersItemList = [self.ordersItemRepository.findAllByOrdersId(ordersId) for ordersId in ordersIdList]
         isDuplicate = self.ordersItemRepository.checkDuplication(allOrdersItemList, productId)
