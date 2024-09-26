@@ -19,27 +19,27 @@ class CartItemRepositoryImpl(CartItemRepository):
 
         return cls.__instance
 
-    def register(self, cartData, cart, product):
-        productPrice = cartData.get('productPrice')
+    def register(self, cartData, cart, companyReport):
+        companyReportPrice = cartData.get('companyReportPrice')
 
         CartItem.objects.create(
             cart=cart,
-            product=product,
+            product=companyReport,
             quantity=1,
-            price=productPrice
+            price=companyReportPrice
         )
 
     def findByCart(self, cart):
         return list(CartItem.objects.filter(cart=cart))
 
-    def findByProductId(self, productId):
+    def findByProductId(self, companyReportId):
         try:
-            return CartItem.objects.get(product_id=productId)
+            return CartItem.objects.get(product_id=companyReportId)
         except CartItem.DoesNotExist:
             return None
 
-    def findAllByProductId(self, productId):
-        return CartItem.objects.filter(product_id=productId)
+    def findAllByProductId(self, companyReportId):
+        return CartItem.objects.filter(product_id=companyReportId)
 
     def findById(self, id):
         return CartItem.objects.get(cartItemId=id)
@@ -50,9 +50,9 @@ class CartItemRepositoryImpl(CartItemRepository):
             cartItem = CartItem.objects.get(cartItemId=cartItemId)
             cartItem.delete()
 
-    def checkDuplication(self, cartItemList, productId):
+    def checkDuplication(self, cartItemList, companyReportId):
         for cartItem in cartItemList:
-            if cartItem.product.productId == productId:
+            if cartItem.product.companyReportId == companyReportId:
                 return True
 
         return False

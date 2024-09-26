@@ -24,9 +24,9 @@ class OrdersItemRepositoryImpl(OrdersItemRepository):
     def findAllByOrdersId(self, ordersId):
         return OrdersItem.objects.filter(orders_id=ordersId)
 
-    def checkDuplication(self, allOrdersItemList, productId):
+    def checkDuplication(self, allOrdersItemList, companyReportId):
         for ordersItemList in allOrdersItemList:
             for ordersItem in ordersItemList:
-                if ordersItem.product.productId == productId:
+                if ordersItem.product.companyReportId == companyReportId:
                     return True
         return False

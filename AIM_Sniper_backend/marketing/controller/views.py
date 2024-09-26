@@ -10,12 +10,12 @@ class MarketingView(viewsets.ViewSet):
     def clickCount(self, request):
         try:
             email = request.data.get('email')
-            product_id = request.data.get('product_id')
+            companyReport_id = request.data.get('companyReport_id')
             purchase = request.data.get('purchase')  # Boolean 값으로 직접 사용
-            print(purchase,email,product_id)
+            print(purchase,email,companyReport_id)
 
             if purchase is not None:
-                marketing_instance = self.marketingService.makeCount(email, product_id, purchase)
+                marketing_instance = self.marketingService.makeCount(email, companyReport_id, purchase)
 
                 return Response(status=status.HTTP_200_OK)
             else:
