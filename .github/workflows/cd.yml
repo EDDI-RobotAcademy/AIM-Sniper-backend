@@ -28,7 +28,7 @@ jobs:
       with:
         python-version: '3.12.3'
 
-    - name: Create .env file for CD
+    - name: Create .env file for Continuous Deploy
       working-directory: ./AIM_Sniper_backend
       run: |
         echo "CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}" >> .env
