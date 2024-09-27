@@ -49,3 +49,7 @@ class SurveyService(ABC):
     @abstractmethod
     def getResultById(self, surveyId):
         pass
+
+    @abstractmethod
+    def getAnswerByAccountId(self, accountId):
+        pass

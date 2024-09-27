@@ -11,7 +11,7 @@ class SurveySelectionRepository(ABC):
         pass
 
     @abstractmethod
-    def findSelection(self, selection):
+    def findSelectionBySelectionId(self, selection):
         pass
 
     @abstractmethod

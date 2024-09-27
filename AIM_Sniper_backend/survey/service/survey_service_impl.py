@@ -137,16 +137,20 @@ class SurveyServiceImpl(SurveyService):
                 question['answer'] = answer
             else:
                 selectionAnswer = self.__surveyAnswerRepository.getSelectionAnswersByQuestionId(question['questionId'])
-                print('selectionAnswer', selectionAnswer)
                 convertedData = {}
                 for selectionId, value in selectionAnswer.items():
-                    selectionName = self.__surveySelectionRepository.findSelection(selectionId).selection
+                    selectionName = self.__surveySelectionRepository.findSelectionBySelectionId(selectionId).selection
                     convertedData[selectionName] = value
 
                 question['selection'] = convertedData
         resultForm = {'surveyId': surveyId, 'surveyTitle': surveyTitle,
                 'surveyDescription': surveyDescription, 'surveyQuestions': surveyQuestions}
         return resultForm
+
+    def getAnswerByAccountId(self, accountId):
+        accountId = self.__accountRepository.findById(accountId)
+        isSubmitted = self.__surveyAnswerRepository.getAnswerByAccountId(accountId)
+        return isSubmitted
 
 
 
