@@ -38,6 +38,9 @@ class SurveyRepositoryImpl(SurveyRepository):
     def findSurveyIdByRandomString(self, randomString):
         survey = Survey.objects.get(survey=randomString)
         return survey.id
+    def findRandomStringBySurveyId(self, surveyId):
+        survey = Survey.objects.get(id=surveyId)
+        return survey.survey
 
 
 
