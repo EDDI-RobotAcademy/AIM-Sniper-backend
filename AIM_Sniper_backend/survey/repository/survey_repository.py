@@ -21,3 +21,7 @@ class SurveyRepository(ABC):
     @abstractmethod
     def findSurveyIdByRandomString(self, randomString):
         pass
+
+    @abstractmethod
+    def findRandomStringBySurveyId(self, surveyId):
+        pass

@@ -123,6 +123,9 @@ class SurveyServiceImpl(SurveyService):
     def getSurveyIdByRandomString(self, randomString):
         return self.__surveyRepository.findSurveyIdByRandomString(randomString)
 
+    def getRandomstringBySurveyId(self,surveyId):
+        return self.__surveyRepository.findRandomStringBySurveyId(surveyId)
+
 
 
 
