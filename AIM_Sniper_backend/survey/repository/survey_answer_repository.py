@@ -14,3 +14,15 @@ class SurveyAnswerRepository(ABC):
     @abstractmethod
     def saveCheckboxAnswer(self, question, selectionIdArray, account):
         pass
+
+    @abstractmethod
+    def getTextAnswersByQuestionId(self, questionId):
+        pass
+
+    @abstractmethod
+    def getSelectionAnswersByQuestionId(self, questionId):
+        pass
+
+    @abstractmethod
+    def getAnswerByAccountId(self, accountId):
+        pass
