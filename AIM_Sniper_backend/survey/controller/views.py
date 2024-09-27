@@ -51,8 +51,8 @@ class SurveyView(viewsets.ViewSet):
 
     def readSurveyForm(self, request, randomString=None):
         surveyId = self.surveyService.getSurveyIdByRandomString(randomString)
-        surveyForm = self.surveyService.geyServeyById(surveyId)
-        # print('surveyId :', pk)
+        surveyForm = self.surveyService.getServeyById(surveyId)
+        print('surveyForm :', surveyForm)
         return Response(surveyForm, status.HTTP_200_OK)
 
     def submitSurvey(self, request):
@@ -75,3 +75,8 @@ class SurveyView(viewsets.ViewSet):
             return Response(data=data,status=status.HTTP_200_OK)
         except Exception as e:
             return Response(False,status=status.HTTP_400_BAD_REQUEST)
+    def SurveyResult(self, request, surveyId=None):
+        resultForm = self.surveyService.getResultById(surveyId)
+        print('해당 서베이를 불러옵니다', resultForm)
+
+        return Response(resultForm, status.HTTP_200_OK)
