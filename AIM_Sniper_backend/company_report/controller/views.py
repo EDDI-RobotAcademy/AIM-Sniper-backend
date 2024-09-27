@@ -45,3 +45,8 @@ class CompanyReportView(viewsets.ViewSet):
         companyReport = self.companyReportService.readCompanyReport(pk)
         serializer = CompanyReportSerializer(companyReport)
         return Response(serializer.data)
+
+    def deleteCompanyReport(self,request,pk=None):
+        self.companyReportService.deleteCompanyReport(pk)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

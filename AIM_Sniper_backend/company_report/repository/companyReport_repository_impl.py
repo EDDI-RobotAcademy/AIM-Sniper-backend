@@ -65,3 +65,7 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
         except:
             return None
 
+    def deleteByCompanyReportId(self, companyReportId):
+        companyReport = CompanyReport.objects.get(companyReportId=companyReportId)
+        companyReport.delete()
+

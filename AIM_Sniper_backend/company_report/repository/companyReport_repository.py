@@ -21,3 +21,7 @@ class CompanyReportRepository(ABC):
     @abstractmethod
     def findAllByCompanyReportCategory(self, companyReportCategory):
         pass
+
+    @abstractmethod
+    def deleteByCompanyReportId(self,companyReportId):
+        pass
