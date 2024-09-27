@@ -123,6 +123,9 @@ class SurveyServiceImpl(SurveyService):
     def getSurveyIdByRandomString(self, randomString):
         return self.__surveyRepository.findSurveyIdByRandomString(randomString)
 
+    def getRandomstringBySurveyId(self,surveyId):
+        return self.__surveyRepository.findRandomStringBySurveyId(surveyId)
+
     def getResultById(self, surveyId):
         surveyTitle = self.__surveyTitleRepository.getTitleBySurveyId(surveyId)
         surveyDescription = self.__surveyDescriptionRepository.getDescriptionBySurveyId(surveyId)
@@ -144,7 +147,6 @@ class SurveyServiceImpl(SurveyService):
         resultForm = {'surveyId': surveyId, 'surveyTitle': surveyTitle,
                 'surveyDescription': surveyDescription, 'surveyQuestions': surveyQuestions}
         return resultForm
-
 
 
 

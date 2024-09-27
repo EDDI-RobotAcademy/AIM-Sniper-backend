@@ -11,4 +11,5 @@ urlpatterns = [
     path('list/', CompanyReportView.as_view({'get': 'list'}), name='company_report-list'),
     path('register', CompanyReportView.as_view({'post': 'register'}), name='company_report-register'),
     path('read/<int:pk>', CompanyReportView.as_view({'get': 'readCompanyReport'}), name='company_report-read'),
+    path('delete/<int:pk>',CompanyReportView.as_view({'delete': 'deleteCompanyReport'}),name='company_report-delete'),
 ]

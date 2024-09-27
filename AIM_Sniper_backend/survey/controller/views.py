@@ -67,3 +67,11 @@ class SurveyView(viewsets.ViewSet):
         
         except Exception as e:
             return Response(False, status.HTTP_400_BAD_REQUEST)
+
+    def pushRandomstring(self,request):
+        try:
+            surveyId = request.data.get('surveyId')
+            data = self.surveyService.getRandomstringBySurveyId(surveyId)
+            return Response(data=data,status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(False,status=status.HTTP_400_BAD_REQUEST)
