@@ -145,6 +145,7 @@ class SurveyServiceImpl(SurveyService):
                 question['selection'] = convertedData
         resultForm = {'surveyId': surveyId, 'surveyTitle': surveyTitle,
                 'surveyDescription': surveyDescription, 'surveyQuestions': surveyQuestions}
+        print('resultForm 생성이 완료되었습니다 : \n', resultForm)
         return resultForm
 
     def getAnswerByAccountId(self, accountId):

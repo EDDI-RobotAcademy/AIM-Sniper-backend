@@ -52,7 +52,6 @@ class SurveyView(viewsets.ViewSet):
     def readSurveyForm(self, request, randomString=None):
         surveyId = self.surveyService.getSurveyIdByRandomString(randomString)
         surveyForm = self.surveyService.getServeyById(surveyId)
-        print('surveyForm :', surveyForm)
         return Response(surveyForm, status.HTTP_200_OK)
 
     def submitSurvey(self, request):
