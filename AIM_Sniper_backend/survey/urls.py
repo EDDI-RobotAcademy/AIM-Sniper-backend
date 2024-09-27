@@ -16,4 +16,5 @@ urlpatterns = [
     path('read-survey-form/<str:randomString>', SurveyView.as_view({'get': 'readSurveyForm'}), name='read-survey-form'),
     path('submit-survey', SurveyView.as_view({'post': 'submitSurvey'}), name='submit-survey'),
     path('randomstring',SurveyView.as_view({'post':'pushRandomstring'}),name='push-randomstring'),
+    path('survey-result/<int:surveyId>', SurveyView.as_view({'get': 'SurveyResult'}), name='survey-result'),
 ]
