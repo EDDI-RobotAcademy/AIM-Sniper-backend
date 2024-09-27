@@ -78,7 +78,7 @@ class SurveyServiceImpl(SurveyService):
     def getRandomStringList(self):
         return self.__surveyRepository.getAllRandomString()
 
-    def geyServeyById(self, surveyId):
+    def getServeyById(self, surveyId):
         surveyTitle = self.__surveyTitleRepository.getTitleBySurveyId(surveyId)
         surveyDescription = self.__surveyDescriptionRepository.getDescriptionBySurveyId(surveyId)
         surveyQuestions = self.__surveyQuestionRepository.getQuestionsBySurveyId(surveyId)
@@ -107,15 +107,15 @@ class SurveyServiceImpl(SurveyService):
                     textAnswer = self.__surveyAnswerRepository.saveTextAnswer(question, answer, account)
 
                 elif answer['questionType'] == 'radio':
-                    selectionId = answer.get('selectionId')
-                    selection = self.__surveySelectionRepository.findSelection(selectionId)
+                    selection = answer.get('answer')
+                    selection = self.__surveySelectionRepository.findSelectionBySelectionName(selection)
                     checkboxAnswer = self.__surveyAnswerRepository.saveRadioAnswer(question, selection, account)
 
                 elif answer['questionType'] == 'checkbox':
-                    selectionIdArray = answer.get('selectionIdArray')
-                    selectionIdArray = \
-                        [self.__surveySelectionRepository.findSelection(selection) for selection in selectionIdArray]
-                    radioAnswer = self.__surveyAnswerRepository.saveCheckboxAnswer(question, selectionIdArray, account)
+                    selectionNameArray = answer.get('answer')
+                    selectionArray = \
+                        [self.__surveySelectionRepository.findSelectionBySelectionName(selection) for selection in selectionNameArray]
+                    radioAnswer = self.__surveyAnswerRepository.saveCheckboxAnswer(question, selectionArray, account)
 
         except Exception as e:
             print('답변 저장중 오류 발생: ', {e})
@@ -126,6 +126,27 @@ class SurveyServiceImpl(SurveyService):
     def getRandomstringBySurveyId(self,surveyId):
         return self.__surveyRepository.findRandomStringBySurveyId(surveyId)
 
+    def getResultById(self, surveyId):
+        surveyTitle = self.__surveyTitleRepository.getTitleBySurveyId(surveyId)
+        surveyDescription = self.__surveyDescriptionRepository.getDescriptionBySurveyId(surveyId)
+        surveyQuestions = self.__surveyQuestionRepository.getQuestionsBySurveyId(surveyId)
+
+        for question in surveyQuestions:
+            if question['questionType'] == 'text':
+                answer = self.__surveyAnswerRepository.getTextAnswersByQuestionId(question['questionId'])
+                question['answer'] = answer
+            else:
+                selectionAnswer = self.__surveyAnswerRepository.getSelectionAnswersByQuestionId(question['questionId'])
+                print('selectionAnswer', selectionAnswer)
+                convertedData = {}
+                for selectionId, value in selectionAnswer.items():
+                    selectionName = self.__surveySelectionRepository.findSelection(selectionId).selection
+                    convertedData[selectionName] = value
+
+                question['selection'] = convertedData
+        resultForm = {'surveyId': surveyId, 'surveyTitle': surveyTitle,
+                'surveyDescription': surveyDescription, 'surveyQuestions': surveyQuestions}
+        return resultForm
 
 
 

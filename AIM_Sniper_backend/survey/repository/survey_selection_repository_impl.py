@@ -36,9 +36,15 @@ class SurveySelectionRepositoryImpl(SurveySelectionRepository):
 
         return listSelections
 
-    def findSelection(self, selectionId):
-        selection = SurveySelection.objects.get(id=selectionId)
+    def findSelection(self, selection):
+        selection = SurveySelection.objects.get(selection=selection)
         return selection
+
+    def findSelectionBySelectionName(self, selectionName):
+        selection = SurveySelection.objects.get(selection=selectionName)
+        print('selection find by name : ', selection)
+        return selection
+
 
 
 
