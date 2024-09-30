@@ -32,3 +32,7 @@ class CompanyReportServiceImpl(CompanyReportService):
     def deleteCompanyReport(self, companyReportId):
         return self.__companyReportRepository.deleteByCompanyReportId(companyReportId)
 
+    def updateCompanyReport(self, companyReportId, companyReportData):
+        companyReport = self.__companyReportRepository.findByCompanyReportId(companyReportId)
+        return self.__companyReportRepository.update(companyReport,companyReportData)
+

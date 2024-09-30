@@ -16,3 +16,6 @@ class CompanyReportService(ABC):
     def deleteCompanyReport(self,companyReportId):
         pass
 
+    @abstractmethod
+    def updateCompanyReport(self,companyReportId,companyReportData):
+        pass

@@ -50,3 +50,14 @@ class CompanyReportView(viewsets.ViewSet):
         self.companyReportService.deleteCompanyReport(pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def modifyCompanyReport(self, request, pk=None):
+        companyReport = self.companyReportService.readCompanyReport(pk)
+        # print(f"request Data: {request.data}")
+        serializer = CompanyReportSerializer(companyReport, data=request.data, partial=True)
+        # print(f"Request Data: {request.data}")  # 이 부분에서 front에서 전달된 데이터를 확인
+        if serializer.is_valid():
+            # print(f"Validated Data: {serializer.validated_data}")  # 검증된 데이터를 출력하여 확인
+            updateCompanyReport = self.companyReportService.updateCompanyReport(pk, serializer.validated_data)
+            return Response(CompanyReportSerializer(updateCompanyReport).data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

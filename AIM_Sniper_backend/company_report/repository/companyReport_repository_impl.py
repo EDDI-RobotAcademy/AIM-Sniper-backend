@@ -69,3 +69,9 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
         companyReport = CompanyReport.objects.get(companyReportId=companyReportId)
         companyReport.delete()
 
+    def update(self, companyReport, companyReportData):
+        for key, value in companyReportData.items():
+            setattr(companyReport, key, value)
+        companyReport.save()
+        return companyReport
+
