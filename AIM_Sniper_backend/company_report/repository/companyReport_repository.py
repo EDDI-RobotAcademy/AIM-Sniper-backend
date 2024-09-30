@@ -11,6 +11,10 @@ class CompanyReportRepository(ABC):
         pass
 
     @abstractmethod
+    def update(self,companyReport,companyReportData):
+        pass
+
+    @abstractmethod
     def findByCompanyReportId(self, companyReportId):
         pass
 
