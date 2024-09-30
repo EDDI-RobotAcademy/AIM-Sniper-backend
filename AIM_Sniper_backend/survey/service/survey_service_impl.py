@@ -32,6 +32,10 @@ class SurveyServiceImpl(SurveyService):
 
         return cls.__instance
 
+    def getRecentSurvey(self):
+        recentId = self.__surveyRepository.getMaxId()
+        return recentId
+
     def createSurveyForm(self, randomString):
         maxId = self.__surveyRepository.getMaxId()
         self.__surveyRepository.registerSurvey(randomString)
