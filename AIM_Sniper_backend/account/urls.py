@@ -1,3 +1,5 @@
+from tkinter.font import names
+
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
@@ -20,10 +22,7 @@ urlpatterns = [
     path('gender', AccountView.as_view({'post': 'getGender'}), name='gender-account'),
     path('birthyear', AccountView.as_view({'post': 'getBirthyear'}), name='birthyear-account'),
     path('account-check', AccountView.as_view({'post': 'checkPassword'}), name='normal-login-check-account'),
-    path('modify-nickname',
-         AccountView.as_view({'post':'modifyNickname'}),
-        name='account-modify-nickname'),
-    path('modify-password',
-         AccountView.as_view({'post':'modifyPassword'}),
-        name='account-modify-password'),
+    path('modify-nickname',AccountView.as_view({'post':'modifyNickname'}),name='account-modify-nickname'),
+    path('modify-password',AccountView.as_view({'post':'modifyPassword'}),name='account-modify-password'),
+    path('role-type',AccountView.as_view({'post':'getRoleType'}),name='account-role-type'),
 ]

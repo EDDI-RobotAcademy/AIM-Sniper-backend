@@ -29,3 +29,7 @@ class AccountService(ABC):
     @abstractmethod
     def withdrawAccount(self, accountId, withdrawReason):
         pass
+
+    @abstractmethod
+    def findRoleTypeByEmail(self,email):
+        pass

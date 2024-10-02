@@ -5,6 +5,8 @@ import string
 from dotenv import load_dotenv
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from starlette.responses import JSONResponse
+
 from account.entity.profile import Profile
 from account.repository.account_repository_impl import AccountRepositoryImpl
 from account.repository.profile_repository_impl import ProfileRepositoryImpl
@@ -260,3 +262,10 @@ class AccountView(viewsets.ViewSet):
             )  # 에러 처리 추가
         accountId = profile.account_id
         return Response({"accountId" : accountId}, status=status.HTTP_200_OK)
+
+    def getRoleType(self,request):
+        email = request.data.get("email")
+        if not email:
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
+        roleType = self.accountService.findRoleTypeByEmail(email)
+        return Response({'roleType':str(roleType)},status=status.HTTP_200_OK)

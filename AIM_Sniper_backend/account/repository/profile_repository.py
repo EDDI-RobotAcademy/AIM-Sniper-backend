@@ -29,3 +29,7 @@ class ProfileRepository(ABC):
     @abstractmethod
     def findGenderTypeByGenderId(self, genderId):
         pass
+
+    @abstractmethod
+    def findByRoleType(self,email):
+        pass
