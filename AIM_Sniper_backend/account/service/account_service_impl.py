@@ -55,3 +55,7 @@ class AccountServiceImpl(AccountService):
         except Exception as e:
             print(f"withdraw_account error: {e}")
             return False
+
+    def findRoleTypeByEmail(self,email):
+        RoleType = self.__profileRepository.findByRoleType(email)
+        return RoleType
