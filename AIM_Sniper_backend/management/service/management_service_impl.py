@@ -26,3 +26,7 @@ class ManagementServiceImpl(ManagementService):
     def revokeRoleType(self, email):
         self.__managementRepository.revokeRoleType(email)
 
+    def getUserLogList(self):
+        return self.__managementRepository.userLogList()
+
+

@@ -13,3 +13,6 @@ class ManagementRepository(ABC):
     @abstractmethod
     def revokeRoleType(self,email):
         pass
+    @abstractmethod
+    def userLogList(self):
+        pass
