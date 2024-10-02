@@ -12,3 +12,6 @@ class ManagementService(ABC):
     def revokeRoleType(self, email):
         pass
 
+    @abstractmethod
+    def getUserLogList(self):
+        pass

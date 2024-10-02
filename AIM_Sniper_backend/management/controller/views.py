@@ -36,3 +36,12 @@ class ManagementView(viewsets.ViewSet):
             print('권한 변경 과정 중 문제 발생:',e)
             return Response({'error':str(e)},status=status.HTTP_400_BAD_REQUEST)
 
+    def userLogList(self, request):
+        try:
+            # Service에서 사용자 로그 리스트 데이터를 가져옴
+            userLogList = self.managementService.getUserLogList()
+            # 성공적으로 데이터를 반환
+            return Response({'data': userLogList}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print('유저 로그 전송 과정 중 문제 발생:', e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

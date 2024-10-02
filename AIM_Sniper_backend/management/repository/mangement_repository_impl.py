@@ -57,3 +57,22 @@ class ManagementRepositoryImpl(ManagementRepository):
         profile.account.save()
         return profile
 
+    def userLogList(self):
+        # 모든 마케팅 데이터를 조회
+        userLogList = Marketing.objects.all()
+
+        # 조회한 데이터를 리스트에 담아 반환할 데이터 가공
+        data = []
+        for userLog in userLogList:
+            user_data = {
+                "userId": userLog.account.id,  # Account의 id
+                "companyReportId": userLog.product.pk,  # CompanyReport의 id
+                "companyReportName":userLog.product.companyReportName,
+                "clickCount": userLog.click_count,  # 클릭 수
+                "purchase": userLog.purchase,  # 구매 여부
+                "lastClickDate": userLog.last_click_date.strftime('%Y-%m-%d %H:%M:%S'),  # 마지막 클릭 시간
+            }
+            data.append(user_data)
+
+        return data  # 데이터를 반환
+
