@@ -1,0 +1,15 @@
+from abc import abstractmethod, ABC
+
+
+class ManagementRepository(ABC):
+    @abstractmethod
+    def userList(self):
+        pass
+
+    @abstractmethod
+    def grantRoleType(self,email):
+        pass
+
+    @abstractmethod
+    def revokeRoleType(self,email):
+        pass
