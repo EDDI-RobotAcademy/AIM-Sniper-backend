@@ -1,5 +1,3 @@
-from win32comext.axscript.client.framework import profile
-
 from account.entity.account_role_type import AccountRoleType
 from account.repository.profile_repository_impl import ProfileRepositoryImpl
 from management.repository.mangement_repository import ManagementRepository
