@@ -32,6 +32,10 @@ class SurveyServiceImpl(SurveyService):
 
         return cls.__instance
 
+    def getRecentSurvey(self):
+        recentId = self.__surveyRepository.getMaxId()
+        return recentId
+
     def createSurveyForm(self, randomString):
         maxId = self.__surveyRepository.getMaxId()
         self.__surveyRepository.registerSurvey(randomString)
@@ -137,16 +141,21 @@ class SurveyServiceImpl(SurveyService):
                 question['answer'] = answer
             else:
                 selectionAnswer = self.__surveyAnswerRepository.getSelectionAnswersByQuestionId(question['questionId'])
-                print('selectionAnswer', selectionAnswer)
                 convertedData = {}
                 for selectionId, value in selectionAnswer.items():
-                    selectionName = self.__surveySelectionRepository.findSelection(selectionId).selection
+                    selectionName = self.__surveySelectionRepository.findSelectionBySelectionId(selectionId).selection
                     convertedData[selectionName] = value
 
                 question['selection'] = convertedData
         resultForm = {'surveyId': surveyId, 'surveyTitle': surveyTitle,
                 'surveyDescription': surveyDescription, 'surveyQuestions': surveyQuestions}
+        print('resultForm 생성이 완료되었습니다 : \n', resultForm)
         return resultForm
+
+    def getAnswerByAccountId(self, accountId):
+        accountId = self.__accountRepository.findById(accountId)
+        isSubmitted = self.__surveyAnswerRepository.getAnswerByAccountId(accountId)
+        return isSubmitted
 
 
 

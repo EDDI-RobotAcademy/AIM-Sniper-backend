@@ -52,7 +52,6 @@ class SurveyView(viewsets.ViewSet):
     def readSurveyForm(self, request, randomString=None):
         surveyId = self.surveyService.getSurveyIdByRandomString(randomString)
         surveyForm = self.surveyService.getServeyById(surveyId)
-        print('surveyForm :', surveyForm)
         return Response(surveyForm, status.HTTP_200_OK)
 
     def submitSurvey(self, request):
@@ -68,15 +67,21 @@ class SurveyView(viewsets.ViewSet):
         except Exception as e:
             return Response(False, status.HTTP_400_BAD_REQUEST)
 
-    def pushRandomstring(self,request):
+    def pushRandomstring(self, request):
         try:
-            surveyId = request.data.get('surveyId')
+            surveyId = self.surveyService.getRecentSurvey()
             data = self.surveyService.getRandomstringBySurveyId(surveyId)
             return Response(data=data,status=status.HTTP_200_OK)
         except Exception as e:
+            print('randomString 가져오는 중 문제 발생 : ', e)
             return Response(False,status=status.HTTP_400_BAD_REQUEST)
-    def SurveyResult(self, request, surveyId=None):
+
+    def surveyResult(self, request, surveyId=None):
         resultForm = self.surveyService.getResultById(surveyId)
-        print('해당 서베이를 불러옵니다', resultForm)
 
         return Response(resultForm, status.HTTP_200_OK)
+
+    def checkIsFirstSubmit(self, request):
+        accountId = request.data.get('accountId')
+        isSubmitted = self.surveyService.getAnswerByAccountId(accountId)
+        return Response(isSubmitted, status.HTTP_200_OK)

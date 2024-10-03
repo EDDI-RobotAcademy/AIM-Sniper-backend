@@ -1,3 +1,6 @@
+from langsmith import expect
+from requests import Response
+from rest_framework import status
 from account.entity.login_history import LoginHistory
 from account.entity.profile import Profile
 from account.repository.profile_repository import ProfileRepository
@@ -106,3 +109,13 @@ class ProfileRepositoryImpl(ProfileRepository):
         except Exception as e:
             print(f"genderId로 genderType 찾는 중 에러 발생: {e}")
             return None
+
+    def findByRoleType(self, email):
+        try:
+            profile = Profile.objects.get(email=email)
+            roleType=profile.account.roleType
+            return roleType
+        except Exception as e:
+            print(f"RoleType을 roletype 찾는 중 에러 발생:",{e})
+            return None
+
