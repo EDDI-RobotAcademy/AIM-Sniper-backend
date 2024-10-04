@@ -1,4 +1,3 @@
-from langsmith import expect
 from requests import Response
 from rest_framework import status
 from account.entity.login_history import LoginHistory
