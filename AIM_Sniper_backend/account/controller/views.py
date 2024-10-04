@@ -5,7 +5,6 @@ import string
 from dotenv import load_dotenv
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from starlette.responses import JSONResponse
 
 from account.entity.profile import Profile
 from account.repository.account_repository_impl import AccountRepositoryImpl
