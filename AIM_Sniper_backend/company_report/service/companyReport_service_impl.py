@@ -36,3 +36,5 @@ class CompanyReportServiceImpl(CompanyReportService):
         companyReport = self.__companyReportRepository.findByCompanyReportId(companyReportId)
         return self.__companyReportRepository.update(companyReport,companyReportData)
 
+    def autoUpdate(self):
+        return self.__companyReportRepository.autoUpdateReport()

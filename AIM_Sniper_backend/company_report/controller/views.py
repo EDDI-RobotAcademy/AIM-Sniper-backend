@@ -61,3 +61,7 @@ class CompanyReportView(viewsets.ViewSet):
             return Response(CompanyReportSerializer(updateCompanyReport).data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def autoUpdateCompanyReport(self, request):
+        self.companyReportService.autoUpdate()
+        return Response(status=status.HTTP_200_OK)

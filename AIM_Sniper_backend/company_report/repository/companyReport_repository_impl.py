@@ -2,15 +2,21 @@ import os
 from company_report.entity.models import CompanyReport
 from company_report.repository.companyReport_repository import CompanyReportRepository
 from AIM_Sniper_backend import settings
-
-
+from company_report.repository.data_for_corp_business_repository_impl import DataForCorpBusinessRepositoryImpl
+from company_report.repository.data_for_corp_overview_repository_impl import DataForCorpOverviewRepositoryImpl
+from company_report.repository.data_for_finance_repository_impl import DataForFinanceRepositoryImpl
 
 
 class CompanyReportRepositoryImpl(CompanyReportRepository):
     __instance = None
+
     def __new__(cls):
         if cls.__instance is None:
             cls.__instance = super().__new__(cls)
+            cls.__instance.__companyBusiness = DataForCorpBusinessRepositoryImpl.getInstance()
+            cls.__instance.__companyOverview = DataForCorpOverviewRepositoryImpl.getInstance()
+            cls.__instance.__companyFinance = DataForFinanceRepositoryImpl.getInstance()
+
 
         return cls.__instance
 
@@ -75,3 +81,28 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
         companyReport.save()
         return companyReport
 
+    def extractReportData(self):
+        print(f"* CORP_CODE start ----------------")
+        corpCodeDict = self.__companyBusiness.getCorpCode()
+
+        print(f"* CORP_OVERVIEW start ----------------")
+        corpOverviewRawData = self.__companyOverview.getRawOverviewDataFromDart(corpCodeDict)
+        corpOverviewPreprocessedData = self.__companyOverview.preprocessRawData(corpOverviewRawData)
+
+        print(f"* CORP_BUSINESS start ----------------")
+        # corpBusinessRawData = self.__companyBusiness.getRawDataFromDart()
+        # corpBusinessPreprocessedData = self.__companyBusiness.preprocessRawData(corpBusinessRawData)
+        # corpBusinessSummary = self.__companyBusiness.changeContentStyle(corpBusinessPreprocessedData)
+        corpBusinessSummary = self.__companyBusiness.changeContentStyle(corpCodeDict)
+
+        print(f"* FINANCIAL_STATEMENTS start ----------------")
+        financeProfitDict = self.__companyFinance.getProfitDataFromDart(corpCodeDict)
+
+        return corpOverviewPreprocessedData, corpBusinessSummary, financeProfitDict
+
+    def autoUpdateReport(self):
+        companyOverview, companyBusiness, companyFinance = self.extractReportData()
+        print(f"{companyOverview}"
+              f"{companyBusiness}"
+              f"{companyFinance}"
+              f"")

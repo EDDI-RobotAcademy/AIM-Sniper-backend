@@ -29,3 +29,11 @@ class CompanyReportRepository(ABC):
     @abstractmethod
     def deleteByCompanyReportId(self,companyReportId):
         pass
+
+    @abstractmethod
+    def extractReportData(self):
+        pass
+
+    @abstractmethod
+    def autoUpdateReport(self):
+        pass
