@@ -19,3 +19,7 @@ class CompanyReportService(ABC):
     @abstractmethod
     def updateCompanyReport(self,companyReportId,companyReportData):
         pass
+
+    @abstractmethod
+    def autoUpdate(self):
+        pass
