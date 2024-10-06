@@ -27,7 +27,7 @@ if not openaiApiKey:
 
 class DataForCorpBusinessRepositoryImpl(DataForCorpBusinessRepository):
     __instance = None
-    WANTED_CORP_LIST = ["SK네트웍스", "삼성전자", "현대자동차", "SK하이닉스", "LG전자", "POSCO홀딩스", "NAVER", "현대모비스", "삼성SDI", "기아", "LG화학", "삼성물산", "롯데케미칼", "SK이노베이션", "S-Oil", "CJ제일제당", "현대건설", "LG디스플레이", "아모레퍼시픽", "한화솔루션", "HD현대중공업", "두산에너빌리티", "SK텔레콤", "케이티", "LG유플러스", "HJ중공업", "삼성전기", "한화에어로스페이스", "효성", "코웨이", "한샘", "신세계", "이마트", "현대백화점", "LG생활건강", "GS리테일", "오뚜기", "농심", "롯데웰푸드", "CJ ENM", "한화", "LG이노텍", "엘에스일렉트릭", "삼성바이오로직스", "셀트리온"]
+    WANTED_CORP_LIST = ["SK네트웍스", "삼성전자", "현대자동차", "SK하이닉스", "LG전자", "POSCO홀딩스", "NAVER", "현대모비스", "기아", "LG화학", "삼성물산", "롯데케미칼", "SK이노베이션", "S-Oil", "CJ제일제당", "현대건설", "LG디스플레이", "아모레퍼시픽", "한화솔루션", "HD현대중공업", "두산에너빌리티", "SK텔레콤", "케이티", "LG유플러스", "HJ중공업", "삼성전기", "한화에어로스페이스", "효성", "코웨이", "한샘", "신세계", "이마트", "현대백화점", "LG생활건강", "GS리테일", "오뚜기", "농심", "롯데웰푸드", "CJ ENM", "한화", "LG이노텍", "엘에스일렉트릭", "삼성바이오로직스", "셀트리온"]
 
     SEARCH_YEAR_GAP = 1
     WANTED_SEARCH_YEAR = f'{(datetime.today() - timedelta(days=365*SEARCH_YEAR_GAP)).year}0101'
@@ -178,14 +178,16 @@ class DataForCorpBusinessRepositoryImpl(DataForCorpBusinessRepository):
     def changeContentStyle(self, preprocessedData):
         maxTokenLength = 16385
         promptEngineering = f"""
-        사용자 입력 메시지의 내용을 <조건>에 맞춰 5가지 포인트로 정리하라.
+        사용자 입력 메시지의 내용은 한국기업의 사업내용이다. <조건>에 맞춰 bullet point로 정리하라.
 
         <조건>
-        1. 개조식으로 작성할 것.
-        2. bullet point로 작성할 것.
-        3. bullet point는 기업의 사업 내용으로 나눌 것.
-        4. 800 token 내로 작성을 마무리할 것.
-        5. 재무제표와 관련된 내용은 최소화할 것. (없으면 더 좋음)
+        1. 개조식으로 작성할 것. (예: [BEFORE] 회사는 지속적인 기술 및 서비스에 대한 투자를 통해 핵심 사업의 경쟁력을 강화하고 있습니다. -> [AFTER] 지속적인 기술 및 서비스에 대한 투자를 통해 핵심 사업의 경쟁력을 강화)
+        2. bullet point는 기업의 사업 내용으로 나눌 것.
+        3. 800 token 내로 작성을 마무리할 것.
+        4. 매출 지표와 관련된 내용은 특이사항이 없으면 적지 말 것.
+        5. 내용에 참고사항 혹은 '라. 사업부문별 요약 재무 현황 항목 참고'와 같이 다른 문서로 보게 유도하는 멘트는 생략할 것.
+        6. '연결대상 종속회사 현황 요약'과 같이 기업의 명칭, 설립일자, 본사 주소, 연락처, 중소기업 여부 정보는 생략할 것.
+        7. 신용등급 내역, 주권상장 여부 내용을 생략할 것.
         """
 
         changedContextDict = {}
@@ -201,7 +203,7 @@ class DataForCorpBusinessRepositoryImpl(DataForCorpBusinessRepository):
             ]
 
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4o-mini",
                 messages=messages,
                 max_tokens=800,
                 temperature=0.7,

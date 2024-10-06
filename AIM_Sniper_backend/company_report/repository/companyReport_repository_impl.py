@@ -102,34 +102,38 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
 
         return corpOverviewPreprocessedData, corpBusinessSummary, financeProfitDict
 
-    def getDataFromFinanceKeys(self, financeDict, index):
-        return list(financeDict.keys())[index]
-
-    def getDataFromFinanceValues(self, financeDict, index):
-        return list(financeDict.values())[index]
+    def getStrOrTupleData(self, value):
+        if isinstance(value, tuple):
+            return " ".join(value)
+        return value
 
     def saveCompanyTotalDataToDB(self, corpName, overviewDict, businessDict):
         company, created = CompanyDataTotal.objects.get_or_create(
             company_name=corpName,
             defaults={
-                "est_date": overviewDict["est_dt"],
-                "company_class": overviewDict["corp_cls"],
-                "ceo_name": overviewDict["ceo_nm"],
-                "address": overviewDict["adres"],
-                "website": overviewDict["hm_url"],
+                "est_date": self.getStrOrTupleData(overviewDict["est_dt"]),
+                "company_class": self.getStrOrTupleData(overviewDict["corp_cls"]),
+                "ceo_name": self.getStrOrTupleData(overviewDict["ceo_nm"]),
+                "address": self.getStrOrTupleData(overviewDict["adres"]),
+                "website": self.getStrOrTupleData(overviewDict["hm_url"]),
                 "business_summary": businessDict["businessSummary"]
             }
         )
 
         if not created:
-            company.est_date = overviewDict["est_dt"],
-            company.company_class = overviewDict["corp_cls"],
-            company.ceo_name = overviewDict["ceo_nm"],
-            company.address = overviewDict["adres"],
-            company.website = overviewDict["hm_url"],
+            company.est_date = self.getStrOrTupleData(overviewDict["est_dt"]),
+            company.company_class = self.getStrOrTupleData(overviewDict["corp_cls"]),
+            company.ceo_name = self.getStrOrTupleData(overviewDict["ceo_nm"]),
+            company.address = self.getStrOrTupleData(overviewDict["adres"]),
+            company.website = self.getStrOrTupleData(overviewDict["hm_url"]),
             company.business_summary = businessDict["businessSummary"]
 
             company.save()
+    def getDataFromFinanceKeys(self, financeDict, index):
+        return list(financeDict.keys())[index]
+
+    def getDataFromFinanceValues(self, financeDict, index):
+        return list(financeDict.values())[index]
 
     def saveCompanyFinanceDataToDB(self, corpName, financeDict):
         try:
@@ -149,12 +153,19 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
                 company.save()
 
         except CompanyDataTotal.DoesNotExist:
-            print(f"Error: 회사 '{corpName}'가 존재하지 않습니다. 먼저 회사를 저장하세요.")
+            print(f"--> Error: 회사 '{corpName}'가 존재하지 않습니다. 먼저 회사를 저장하세요.")
 
 
     def autoUpdateReport(self):
         companyOverview, companyBusiness, companyFinance = self.extractReportData()
 
         for corpName in companyOverview.keys():
-            self.saveCompanyTotalDataToDB(corpName, companyOverview[corpName], companyBusiness[corpName])
-            self.saveCompanyFinanceDataToDB(corpName, companyFinance[corpName])
+            try:
+                self.saveCompanyTotalDataToDB(corpName, companyOverview[corpName], companyBusiness[corpName])
+            except Exception as e:
+                print(f"* Total Save Fail ({corpName}) -> {e}")
+
+            try:
+                self.saveCompanyFinanceDataToDB(corpName, companyFinance[corpName])
+            except Exception as e:
+                print(f"* Finance Save Fail ({corpName}) -> {e}")
