@@ -1,4 +1,7 @@
 import os
+
+from company_report.entity.company_data_finance import FinancialData
+from company_report.entity.company_data_total import CompanyDataTotal
 from company_report.entity.models import CompanyReport
 from company_report.repository.companyReport_repository import CompanyReportRepository
 from AIM_Sniper_backend import settings
@@ -90,19 +93,68 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
         corpOverviewPreprocessedData = self.__companyOverview.preprocessRawData(corpOverviewRawData)
 
         print(f"* CORP_BUSINESS start ----------------")
-        # corpBusinessRawData = self.__companyBusiness.getRawDataFromDart()
-        # corpBusinessPreprocessedData = self.__companyBusiness.preprocessRawData(corpBusinessRawData)
-        # corpBusinessSummary = self.__companyBusiness.changeContentStyle(corpBusinessPreprocessedData)
-        corpBusinessSummary = self.__companyBusiness.changeContentStyle(corpCodeDict)
+        corpBusinessRawData = self.__companyBusiness.getRawDataFromDart()
+        corpBusinessPreprocessedData = self.__companyBusiness.preprocessRawData(corpBusinessRawData)
+        corpBusinessSummary = self.__companyBusiness.changeContentStyle(corpBusinessPreprocessedData)
 
         print(f"* FINANCIAL_STATEMENTS start ----------------")
         financeProfitDict = self.__companyFinance.getProfitDataFromDart(corpCodeDict)
 
         return corpOverviewPreprocessedData, corpBusinessSummary, financeProfitDict
 
+    def getDataFromFinanceKeys(self, financeDict, index):
+        return list(financeDict.keys())[index]
+
+    def getDataFromFinanceValues(self, financeDict, index):
+        return list(financeDict.values())[index]
+
+    def saveCompanyTotalDataToDB(self, corpName, overviewDict, businessDict):
+        company, created = CompanyDataTotal.objects.get_or_create(
+            company_name=corpName,
+            defaults={
+                "est_date": overviewDict["est_dt"],
+                "company_class": overviewDict["corp_cls"],
+                "ceo_name": overviewDict["ceo_nm"],
+                "address": overviewDict["adres"],
+                "website": overviewDict["hm_url"],
+                "business_summary": businessDict["businessSummary"]
+            }
+        )
+
+        if not created:
+            company.est_date = overviewDict["est_dt"],
+            company.company_class = overviewDict["corp_cls"],
+            company.ceo_name = overviewDict["ceo_nm"],
+            company.address = overviewDict["adres"],
+            company.website = overviewDict["hm_url"],
+            company.business_summary = businessDict["businessSummary"]
+
+            company.save()
+
+    def saveCompanyFinanceDataToDB(self, corpName, financeDict):
+        try:
+            company = CompanyDataTotal.objects.get(company_name=corpName)
+
+            loopMax = len(financeDict['revenueTrend'])
+            for index in range(loopMax):
+                finance, created = FinancialData.objects.update_or_create(
+                    company=company,
+                    year=self.getDataFromFinanceKeys(financeDict['revenueTrend'], index),
+                    defaults={
+                        "revenue": self.getDataFromFinanceValues(financeDict['revenueTrend'], index),
+                        "receivable_turnover": self.getDataFromFinanceValues(financeDict['receivableTurnover'], index),
+                        "operating_cash_flow": self.getDataFromFinanceValues(financeDict['operatingCashFlow'], index),
+                    }
+                )
+                company.save()
+
+        except CompanyDataTotal.DoesNotExist:
+            print(f"Error: 회사 '{corpName}'가 존재하지 않습니다. 먼저 회사를 저장하세요.")
+
+
     def autoUpdateReport(self):
         companyOverview, companyBusiness, companyFinance = self.extractReportData()
-        print(f"{companyOverview}"
-              f"{companyBusiness}"
-              f"{companyFinance}"
-              f"")
+
+        for corpName in companyOverview.keys():
+            self.saveCompanyTotalDataToDB(corpName, companyOverview[corpName], companyBusiness[corpName])
+            self.saveCompanyFinanceDataToDB(corpName, companyFinance[corpName])
