@@ -23,7 +23,7 @@ class DataForCorpBusinessRepository(ABC):
         pass
 
     @abstractmethod
-    def getOverviewDataFromXml(self, xmlFile, corpName):
+    def getOverviewDataFromXml(self, xmlFile, corpName, receiptCode):
         pass
 
     @abstractmethod
@@ -32,6 +32,10 @@ class DataForCorpBusinessRepository(ABC):
 
     @abstractmethod
     def getRawDataFromDart(self):
+        pass
+
+    @abstractmethod
+    def preprocessTaginParagraph(self, paragraph):
         pass
 
     @abstractmethod

@@ -35,5 +35,25 @@ class CompanyReportRepository(ABC):
         pass
 
     @abstractmethod
+    def getStrOrTupleData(self, value):
+        pass
+
+    @abstractmethod
+    def saveCompanyTotalDataToDB(self, corpName, overviewDict, businessDict):
+        pass
+
+    @abstractmethod
+    def getDataFromFinanceKeys(self, financeDict, index):
+        pass
+
+    @abstractmethod
+    def getDataFromFinanceValues(self, financeDict, index):
+        pass
+
+    @abstractmethod
+    def saveCompanyFinanceDataToDB(self, corpName, financeDict):
+        pass
+
+    @abstractmethod
     def autoUpdateReport(self):
         pass

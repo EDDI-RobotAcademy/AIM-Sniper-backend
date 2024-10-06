@@ -70,18 +70,4 @@ class DataForCorpOverviewRepositoryImpl(DataForCorpOverviewRepository):
 
             overviewDict[corpName] = data
 
-            company = CompanyDataTotal.objects.create(
-                company_name=corpName,
-                est_date=data['est_dt'],
-                company_class=data['corp_cls'],
-                ceo_name=data['ceo_nm'],
-                address=data['adres'],
-                website=data['hm_url']
-            )
-            company.save()
-
-        # overviewDict = {
-        #     'SK네트웍스': {'est_dt': '69년차 (1956)', 'corp_cls': '유가', 'ceo_nm': '이호정', 'adres': '경기도 수원시 장안구', 'hm_url': 'www.sknetworks.co.kr'},
-        #     'LG화학': {'est_dt': '24년차 (2001)', 'corp_cls': '유가', 'ceo_nm': '신학철', 'adres': '서울특별시 영등포구', 'hm_url': 'www.lgchem.com'}
-        # }
         return overviewDict

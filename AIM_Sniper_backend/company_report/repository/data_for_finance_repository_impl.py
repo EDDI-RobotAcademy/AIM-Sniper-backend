@@ -40,20 +40,6 @@ class DataForFinanceRepositoryImpl(DataForFinanceRepository):
 
         return cls.__instance
 
-    def preprocessFSFromDart(self, *dfs):
-        for df in dfs:
-            newColList = [upperIndex
-                          if type(lowerIndex) == tuple else lowerIndex
-                          for (upperIndex, lowerIndex) in df.columns]
-
-            df.columns = newColList
-
-            numerical_cols = df.select_dtypes(exclude="O").columns
-            df.set_index(["label_ko", "label_en"], inplace=True)
-            df.drop(columns=[col for col in df.columns if col not in numerical_cols], axis=1, inplace=True)
-
-        return dfs
-
     def selectIncomeDocument(self, parsedData):
         incomeDf = self.getFinancialStatements(parsedData, "손익계산서")
         comprehensiveIncomeDf = self.getFinancialStatements(parsedData, "포괄손익계산서")
@@ -154,7 +140,15 @@ class DataForFinanceRepositoryImpl(DataForFinanceRepository):
                             balance.index, "매출채권", "trade receivables")
 
         revenue = income.loc[revenueName].astype(float)
-        tradeReceivables = balance.loc[receivableName].astype(float)
+        revenue = revenue.squeeze()
+
+        if sum([name==receivableName for name in balance.loc[receivableName].index]) >= 2:
+            tradeReceivables = balance.loc[receivableName].astype(float)
+            tradeReceivables = tradeReceivables.iloc[0, :].squeeze()
+        else:
+            tradeReceivables = balance.loc[receivableName].astype(float)
+            tradeReceivables = tradeReceivables.squeeze()
+
 
         receivableTturnover = (revenue / tradeReceivables)
         averagedReceivableTurnover = revenue / ((tradeReceivables.shift(1) + tradeReceivables) / 2)
@@ -168,36 +162,31 @@ class DataForFinanceRepositoryImpl(DataForFinanceRepository):
         return cashFlow.loc[name].squeeze().to_dict()
 
     def getProfitDataFromDart(self, corpCodeDict):
-        # profitDataDict = {}
-        #
-        # for corpName, corpCode in corpCodeDict.items():
-        #     print(f"* FS Extract - {corpName}")
-        #     parsedData = self.parsingFromOpenAPI(corpCode)
-        #
-        #     try:
-        #         balance = self.getFinancialStatements(parsedData, "재무상태표")
-        #         income = self.selectIncomeDocument(parsedData)
-        #         cashFlow = self.getFinancialStatements(parsedData, "현금흐름표")
-        #
-        #         if all([(balance is None), (income is None), (cashFlow is None)]):
-        #             print(f"[FS_Docu Not Exist] - '{corpName} ({corpCode})'")
-        #
-        #         revenueTrend = self.getRevenueTrend(income)
-        #         receivableTurnover = self.getReceivableTurnover(income, balance)
-        #         operatingCashFlow = self.getOperatingCashFlow(cashFlow)
-        #
-        #     except Exception as e:
-        #         print(f"[NOT_PASS '{corpName}({corpCode})-FSValue'] => {e}")
-        #         revenueTrend, receivableTurnover, operatingCashFlow = 0, 0, 0
-        #         pass
-        #
-        #     profitDataDict[corpName] = {"revenueTrend": revenueTrend,
-        #                                 "receivableTurnover": receivableTurnover,
-        #                                 "operatingCashFlow": operatingCashFlow}
+        profitDataDict = {}
 
-        profitDataDict ={
-            'SK네트웍스': {'revenueTrend': {2023: '6088582000000', 2022: '6612595000000', 2021: '8152467000000'}, 'receivableTurnover': {2023: 21.162586677325734, 2022: 21.35520009817599, 2021: 15.50623865914477}, 'operatingCashFlow': {2023: '60854000000', 2022: '58563000000', 2021: '503382000000'}},
-            'LG화학': {'revenueTrend': {2023: '19947377000000', 2022: '22637157000000', 2021: '19657193000000'}, 'receivableTurnover': {2023: 6.215098412433327, 2022: 7.325713181726393, 2021: 6.029159103582003}, 'operatingCashFlow': {2023: '2104000000000', 2022: '1387508000000', 2021: '4041768000000'}}
-        }
+        for corpName, corpCode in corpCodeDict.items():
+            print(f"* FS Extract - {corpName}")
+            parsedData = self.parsingFromOpenAPI(corpCode)
+
+            try:
+                balance = self.getFinancialStatements(parsedData, "재무상태표")
+                income = self.selectIncomeDocument(parsedData)
+                cashFlow = self.getFinancialStatements(parsedData, "현금흐름표")
+
+                if all([(balance is None), (income is None), (cashFlow is None)]):
+                    print(f"[FS_Docu Not Exist] - '{corpName} ({corpCode})'")
+
+                revenueTrend = self.getRevenueTrend(income)
+                receivableTurnover = self.getReceivableTurnover(income, balance)
+                operatingCashFlow = self.getOperatingCashFlow(cashFlow)
+
+            except Exception as e:
+                print(f"[NOT_PASS '{corpName}({corpCode})-FSValue'] => {e}")
+                revenueTrend, receivableTurnover, operatingCashFlow = 0, 0, 0
+                pass
+
+            profitDataDict[corpName] = {"revenueTrend": revenueTrend,
+                                        "receivableTurnover": receivableTurnover,
+                                        "operatingCashFlow": operatingCashFlow}
 
         return profitDataDict

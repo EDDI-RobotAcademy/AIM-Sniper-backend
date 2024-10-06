@@ -27,8 +27,7 @@ if not openaiApiKey:
 
 class DataForCorpBusinessRepositoryImpl(DataForCorpBusinessRepository):
     __instance = None
-    WANTED_CORP_LIST = ["SK네트웍스", "삼성전자"]
-        # , "현대자동차", "SK하이닉스", "LG전자", "POSCO홀딩스", "NAVER", "현대모비스", "삼성SDI", "기아", "LG화학", "삼성물산", "롯데케미칼", "SK이노베이션", "S-Oil", "CJ제일제당", "현대건설", "삼성에스디에스", "LG디스플레이", "아모레퍼시픽", "한화솔루션", "HD현대중공업", "LS", "두산에너빌리티", "SK텔레콤", "케이티", "LG유플러스", "HJ중공업", "삼성전기", "한화에어로스페이스", "효성", "OCI", "코웨이", "한샘", "신세계", "이마트", "현대백화점", "LG생활건강", "GS리테일", "오뚜기", "농심", "롯데웰푸드", "CJ ENM", "한화", "두산밥캣", "LG이노텍", "엘에스일렉트릭", "삼성바이오로직스", "셀트리온"]
+    WANTED_CORP_LIST = ["SK네트웍스", "삼성전자", "현대자동차", "SK하이닉스", "LG전자", "POSCO홀딩스", "NAVER", "현대모비스", "기아", "LG화학", "삼성물산", "롯데케미칼", "SK이노베이션", "S-Oil", "CJ제일제당", "현대건설", "LG디스플레이", "아모레퍼시픽", "한화솔루션", "HD현대중공업", "두산에너빌리티", "SK텔레콤", "케이티", "LG유플러스", "HJ중공업", "삼성전기", "한화에어로스페이스", "효성", "코웨이", "한샘", "신세계", "이마트", "현대백화점", "LG생활건강", "GS리테일", "오뚜기", "농심", "롯데웰푸드", "CJ ENM", "한화", "LG이노텍", "엘에스일렉트릭", "삼성바이오로직스", "셀트리온"]
 
     SEARCH_YEAR_GAP = 1
     WANTED_SEARCH_YEAR = f'{(datetime.today() - timedelta(days=365*SEARCH_YEAR_GAP)).year}0101'
@@ -39,9 +38,7 @@ class DataForCorpBusinessRepositoryImpl(DataForCorpBusinessRepository):
             cls.__instance = super().__new__(cls)
             dart.set_api_key(api_key=dartApiKey)
             openai.api_key = openaiApiKey
-            # cls.__instance.__totalCorpDict = {}
             cls.__instance.__wantedCorpCodeDict = {}
-            # cls.__instance.__wantedReceiptCodeDict = {}
 
         return cls.__instance
 
@@ -72,24 +69,21 @@ class DataForCorpBusinessRepositoryImpl(DataForCorpBusinessRepository):
 
 
     def getCorpCode(self):
-        # totalCorpDict = self.totalCorpCode()
-        # corpCodeDict = {}
-        # wrongInput = []
-        #
-        # for name in self.WANTED_CORP_LIST:
-        #     print(">", name)
-        #     code = totalCorpDict.get(name)
-        #     print("--->", code)
-        #     if code is not None:
-        #         corpCodeDict[name] = code
-        #     else:
-        #         wrongInput.append(name)
-        #
-        # if wrongInput:
-        #     raise ValueError(f"다음 기업명을 찾을 수 없습니다: {wrongInput}")
-        #
-        # self.__wantedCorpCodeDict = corpCodeDict
-        corpCodeDict = {'SK네트웍스': '00131780', 'LG화학': '00356361'}
+        totalCorpDict = self.totalCorpCode()
+        corpCodeDict = {}
+        wrongInput = []
+
+        for name in self.WANTED_CORP_LIST:
+            code = totalCorpDict.get(name)
+            if code is not None:
+                corpCodeDict[name] = code
+            else:
+                wrongInput.append(name)
+
+        if wrongInput:
+            raise ValueError(f"다음 기업명을 찾을 수 없습니다: {wrongInput}")
+
+        self.__wantedCorpCodeDict = corpCodeDict
         return corpCodeDict
 
     def getCorpReceiptCode(self):
@@ -184,39 +178,37 @@ class DataForCorpBusinessRepositoryImpl(DataForCorpBusinessRepository):
     def changeContentStyle(self, preprocessedData):
         maxTokenLength = 16385
         promptEngineering = f"""
-        사용자 입력 메시지의 내용을 <조건>에 맞춰 5가지 포인트로 정리하라.
+        사용자 입력 메시지의 내용은 한국기업의 사업내용이다. <조건>에 맞춰 bullet point로 정리하라.
 
         <조건>
-        1. 개조식으로 작성할 것.
-        2. bullet point로 작성할 것.
-        3. bullet point는 기업의 사업 내용으로 나눌 것.
-        4. 800 token 내로 작성을 마무리할 것.
-        5. 재무제표와 관련된 내용은 최소화할 것. (없으면 더 좋음)
+        1. 개조식으로 작성할 것. (예: [BEFORE] 회사는 지속적인 기술 및 서비스에 대한 투자를 통해 핵심 사업의 경쟁력을 강화하고 있습니다. -> [AFTER] 지속적인 기술 및 서비스에 대한 투자를 통해 핵심 사업의 경쟁력을 강화)
+        2. bullet point는 기업의 사업 내용으로 나눌 것.
+        3. 800 token 내로 작성을 마무리할 것.
+        4. 매출 지표와 관련된 내용은 특이사항이 없으면 적지 말 것.
+        5. 내용에 참고사항 혹은 '라. 사업부문별 요약 재무 현황 항목 참고'와 같이 다른 문서로 보게 유도하는 멘트는 생략할 것.
+        6. '연결대상 종속회사 현황 요약'과 같이 기업의 명칭, 설립일자, 본사 주소, 연락처, 중소기업 여부 정보는 생략할 것.
+        7. 신용등급 내역, 주권상장 여부 내용을 생략할 것.
         """
 
         changedContextDict = {}
-        # for corpName, doc in preprocessedData.items():
-        #     print(f"* CB_AI - {corpName}")
-        #     if len(doc) >= maxTokenLength:
-        #         print(f"사업내용 토큰 수 초과 -> {corpName}")
-        #         continue
-        #
-        #     messages = [
-        #         {"role": "system", "content": promptEngineering},
-        #         {"role": "user", "content": doc}
-        #     ]
-        #
-        #     response = openai.ChatCompletion.create(
-        #         model="gpt-3.5-turbo",
-        #         messages=messages,
-        #         max_tokens=800,
-        #         temperature=0.7,
-        #     )
-        #
-        #     changedContextDict[corpName] = {"businessSummary": response.choices[0]['message']['content']}
+        for corpName, doc in preprocessedData.items():
+            print(f"* CB_AI - {corpName}")
+            if len(doc) >= maxTokenLength:
+                print(f"사업내용 토큰 수 초과 -> {corpName}")
+                continue
 
-        changedContextDict = {
-            'SK네트웍스': {'businessSummary': "- **SK네트웍스**\n  - 휴대폰 중심의 정보통신 유통 사업\n  - 글로벌 트레이딩 사업\n  - 자동차 렌털 및 경정비 중심의 모빌리티 사업\n  - 환경가전 렌털 사업\n  - 워커힐 호텔앤리조트 운영\n\n- **민팃**\n  - 중고폰 유통 사업\n  - ICT 리사이클 브랜드로 활동\n  - 민팃 ATM을 통한 중고폰 매입 서비스\n  - 전국 생활 거점으로 중고폰 거래 문화 확대\n  - 중고폰 재활용 및 기부 환경 제공\n\n- **스피드메이트**\n  - 자동차 경정비 사업\n  - 수입차 경정비 서비스\n  - 타이어 및 자동차 부품 유통\n  - O2O 플랫폼 '타이어픽' 제공\n  - 고객 중심적인 수입차 정비 문화 확립\n\n- **워커힐 호텔앤리조트**\n  - 레저, 문화, 음식 서비스 제공\n  - 친환경 호텔 전환 활동\n  - 다양한 라이프스타일 경험 제공\n  - 대한민국 호텔 업계 리더\n  - ESG 경영활동 강화\n\n- **글로벌 사업부**\n - 글로벌 마케팅을 위한 화학/소재 중심 사업\n  - SK렌터카를 통한 렌터카 전문 서비스\n  - 친환경 트렌드에 대응한 미래 모빌리티 서비스 개발\n  - SK매직을 통한 렌탈산업 선도\n  - ESG 기반 제품 및 서비스 제공\n\n이상으로 SK네트웍스와 관련된 사업 내용을 5가지 포인트로 정리해보았습니다."},
-            'LG화학': {"businessSummary": "- 2023년 매출: 55조 2,498억원 달성\n- 사업부문별 매출액:\n  - LG에너지솔루션: 60.9%\n  - 석유화학 사업부문: 31.1%\n  - 첨단소재 사업부문: 4.4%\n  - 생명과학 사업부문: 2.0%\n  - 공통 및 기타부문: 1.5%\n- 석유화학 사업부문:\n  - PE, PVC, ABS, SAP, 합성고무 등 주요 제품 생산\n  - 친환경 소재 사업 강화: PCR 제품, Bio-SAP, PBAT, PLA 사업화\n  - 'Sustainability' 및 'Nexolution' 사업부 신설\n- 첨단소재 사업부문:\n  - IT/가전, 자동차산업 변화 대응\n  - 리튬 등 메탈 가격 하락으로 수익성 일부 감소\n  - 북미 중심으로 전지재료 출하량 확대 및 수익성 개선 계획\n- 생명과학 사업부문:\n  - 주요 제품 매출 성장, R&D 투자 확대\n  - 항암, 당뇨/대사 영역에 집중 및 카테고리 리더십 강화\n- LG에너지솔루션:\n  - EV, ESS, Micro Mobility 등에 배터리 제품 공급\n  - 성장성 높은 북미 중심 수요 대응 및 수익성 개선\n  - R&D 투자 강화, 제품 안전성 및 품질 향상, 고객별/포트폴리오별 최적 솔루션 제공\n- 공통 및 기타부문:\n  - (주)팜한농: 작물보호제, 종자, 비료 사업\n  - 테라도 중심 작물보호제 해외 판매 강화 및 비료 사업부문 구조개선 계획"},
-        }
+            messages = [
+                {"role": "system", "content": promptEngineering},
+                {"role": "user", "content": doc}
+            ]
+
+            response = openai.ChatCompletion.create(
+                model="gpt-4o-mini",
+                messages=messages,
+                max_tokens=800,
+                temperature=0.7,
+            )
+
+            changedContextDict[corpName] = {"businessSummary": response.choices[0]['message']['content']}
+
         return changedContextDict
