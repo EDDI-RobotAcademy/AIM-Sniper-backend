@@ -65,3 +65,18 @@ class CompanyReportView(viewsets.ViewSet):
     def autoUpdateCompanyReport(self, request):
         self.companyReportService.autoUpdate()
         return Response(status=status.HTTP_200_OK)
+
+    def readCompanyReportFinance(self, request):
+        companyName = request.data.get('companyReportName')
+        companyReportFinance = self.companyReportService.readCompanyReportFinance(companyName)
+
+        # companyReportFinance는 (리스트2021, 리스트2022, 리스트2023) 형태입니다.
+        # 이를 하나의 리스트로 합쳐서 반환합니다.
+        combinedFinanceData = {
+            '2021': companyReportFinance[0],
+            '2022': companyReportFinance[1],
+            '2023': companyReportFinance[2],
+        }
+
+        return Response(combinedFinanceData)  # JsonResponse가 자동으로 처리해줍니다.
+
