@@ -23,3 +23,9 @@ class CompanyReportService(ABC):
     @abstractmethod
     def autoUpdate(self):
         pass
+
+    @abstractmethod
+    def readCompanyReportFinance(self,companyReportName):
+        pass
+
+        pass

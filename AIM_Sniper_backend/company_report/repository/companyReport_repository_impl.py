@@ -169,3 +169,15 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
                 self.saveCompanyFinanceDataToDB(corpName, companyFinance[corpName])
             except Exception as e:
                 print(f"* Finance Save Fail ({corpName}) -> {e}")
+
+    def readCompanyReportFinance(self, companyReportName):
+        # 해당 회사와 연도의 데이터를 필터링
+        id=CompanyDataTotal.objects.get(company_name=companyReportName)
+        FinanceData2021 = FinancialData.objects.filter(company=id, year=2021).values('revenue', 'receivable_turnover','operating_cash_flow')
+        FinanceData2022 = FinancialData.objects.filter(company=id, year=2022).values('revenue', 'receivable_turnover',
+                                                                                    'operating_cash_flow')
+        FinanceData2023 = FinancialData.objects.filter(company=id, year=2023).values('revenue', 'receivable_turnover',
+                                                                                    'operating_cash_flow')
+        # 결과 반환
+        return list(FinanceData2021),list(FinanceData2022),list(FinanceData2023)
+

@@ -1,6 +1,7 @@
 import random
 
 from company_report.repository.companyReport_repository_impl import CompanyReportRepositoryImpl
+from company_report.repository.data_for_finance_repository_impl import DataForFinanceRepositoryImpl
 from company_report.service.companyReport_service import CompanyReportService
 
 class CompanyReportServiceImpl(CompanyReportService):
@@ -38,3 +39,7 @@ class CompanyReportServiceImpl(CompanyReportService):
 
     def autoUpdate(self):
         return self.__companyReportRepository.autoUpdateReport()
+
+    def readCompanyReportFinance(self,companyReportName):
+        return self.__companyReportRepository.readCompanyReportFinance(companyReportName)
+
