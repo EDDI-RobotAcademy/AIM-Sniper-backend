@@ -43,3 +43,6 @@ class CompanyReportServiceImpl(CompanyReportService):
     def readCompanyReportFinance(self,companyReportName):
         return self.__companyReportRepository.readCompanyReportFinance(companyReportName)
 
+    def readCompanyReportInfo(self, companyReportName):
+        return self.__companyReportRepository.readCompanyReportInfo(companyReportName)
+

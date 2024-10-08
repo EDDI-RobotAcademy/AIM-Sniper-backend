@@ -62,4 +62,8 @@ class CompanyReportRepository(ABC):
     def readCompanyReportFinance(self, companyReportName):
         pass
 
+    @abstractmethod
+    def readCompanyReportInfo(self,companyReportName):
+        pass
+
         pass

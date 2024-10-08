@@ -15,4 +15,5 @@ urlpatterns = [
     path('modify/<int:pk>', CompanyReportView.as_view({'put': 'modifyCompanyReport'}), name='company_report-modify'),
     path('auto_update/', CompanyReportView.as_view({'post': 'autoUpdateCompanyReport'}), name='company_report-auto_update'),
     path('finance',CompanyReportView.as_view({'post':'readCompanyReportFinance'}),name='company-report-finance'),
+    path('info',CompanyReportView.as_view({'post':'readCompanyReportInfo'}),name='company-report-info'),
 ]

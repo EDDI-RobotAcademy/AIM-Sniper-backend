@@ -80,3 +80,8 @@ class CompanyReportView(viewsets.ViewSet):
 
         return Response(combinedFinanceData)  # JsonResponse가 자동으로 처리해줍니다.
 
+    def readCompanyReportInfo(self, request):
+        companyName = request.data.get('companyReportName')
+        companyReportInfo = self.companyReportService.readCompanyReportInfo(companyName)
+        return Response(companyReportInfo)  # JsonResponse가 자동으로 처리해줍니다.
+
