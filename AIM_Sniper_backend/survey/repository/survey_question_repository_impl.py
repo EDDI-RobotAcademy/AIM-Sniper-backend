@@ -53,7 +53,7 @@ class SurveyQuestionRepositoryImpl(SurveyQuestionRepository):
             questionImage = SurveyImage.objects.filter(question_id=question).order_by('id').values_list('question_id', 'image')
             images.append(questionImage)
 
-        questionImageList = [img for img in images[0]]
+        questionImageList = [item for queryset in images for item in queryset]
         print('questionImageList: ', questionImageList)
 
         questionList = list(questionList)
