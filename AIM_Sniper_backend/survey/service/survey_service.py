@@ -19,7 +19,7 @@ class SurveyService(ABC):
         pass
 
     @abstractmethod
-    def registerQuestion(self, survey, questionTitle, questionType, essential):
+    def registerQuestion(self, survey, questionTitle, questionType, essential, images):
         pass
 
     @abstractmethod
