@@ -186,3 +186,6 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
         basicInfo=companyReportInfo.values('company_name','est_date','company_class','ceo_name','address','website')
         return basicInfo
 
+    def readCompanyReportSummary(self, companyReportName):
+        companyReportSummary = CompanyDataTotal.objects.filter(company_name=companyReportName).values('business_summary')
+        return companyReportSummary[0]['business_summary']
