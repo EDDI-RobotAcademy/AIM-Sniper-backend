@@ -58,15 +58,16 @@ class SurveyServiceImpl(SurveyService):
             print('설문 제목, 설명 저장 중 오류 발생 : ', e)
             return False
 
-    def registerQuestion(self, survey, questionTitle, questionType, essential):
+    def registerQuestion(self, survey, questionTitle, questionType, essential, images):
         try:
-            result = (
-                self.__surveyQuestionRepository.registerQuestion(survey, questionTitle, questionType, essential))
-            return result
+            question = (
+                self.__surveyQuestionRepository.registerQuestion(survey, questionTitle, questionType, essential, images))
+            return question
 
         except Exception as e:
             print('설문 질문 저장 중 오류 발생 : ', e)
             return False
+
 
     def registerSelection(self, question, selection):
         try:
@@ -156,6 +157,7 @@ class SurveyServiceImpl(SurveyService):
         accountId = self.__accountRepository.findById(accountId)
         isSubmitted = self.__surveyAnswerRepository.getAnswerByAccountId(accountId)
         return isSubmitted
+
 
 
 

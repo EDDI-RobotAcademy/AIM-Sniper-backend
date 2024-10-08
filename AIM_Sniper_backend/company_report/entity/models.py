@@ -1,5 +1,9 @@
 from django.db import models
 
+from company_report.entity.company_data_total import CompanyDataTotal
+from company_report.entity.company_data_finance import FinancialData
+
+
 class CompanyReport(models.Model):
     companyReportId = models.AutoField(primary_key=True)
     companyReportName = models.CharField(max_length=128, null=False)
