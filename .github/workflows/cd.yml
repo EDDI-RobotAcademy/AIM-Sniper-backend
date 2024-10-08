@@ -15,7 +15,7 @@ jobs:
         echo "ip=$(curl -s canhazip.com)" >> $GITHUB_OUTPUT
 
     - name: Configure AWS IAM Credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v3
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -147,7 +147,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
   
       - name: Configure AWS IAM Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
