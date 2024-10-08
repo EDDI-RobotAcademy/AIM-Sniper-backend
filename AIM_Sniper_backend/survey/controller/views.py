@@ -26,9 +26,12 @@ class SurveyView(viewsets.ViewSet):
         surveyId = request.data.get('surveyId')
         questionTitle = request.data.get('questionTitle')
         questionType = request.data.get('questionType')
-        essential = request.data.get('isEssential')
+        essential = request.data.get('isEssential') == 'true'
+        images = request.FILES.getlist('images')
+        print('surveyId: ', surveyId, 'questionTitle: ', questionTitle, 'questionType: ', questionType,
+              'essential: ', essential, 'images: ', images)
         survey = self.surveyService.getSurveyBySurveyId(surveyId)
-        result = self.surveyService.registerQuestion(survey, questionTitle, questionType, essential)
+        result = self.surveyService.registerQuestion(survey, questionTitle, questionType, essential, images)
         return Response(result, status=status.HTTP_200_OK)
 
 
@@ -52,6 +55,7 @@ class SurveyView(viewsets.ViewSet):
     def readSurveyForm(self, request, randomString=None):
         surveyId = self.surveyService.getSurveyIdByRandomString(randomString)
         surveyForm = self.surveyService.getServeyById(surveyId)
+        print('내보낼 결과 : ', surveyForm)
         return Response(surveyForm, status.HTTP_200_OK)
 
     def submitSurvey(self, request):
@@ -78,7 +82,6 @@ class SurveyView(viewsets.ViewSet):
 
     def surveyResult(self, request, surveyId=None):
         resultForm = self.surveyService.getResultById(surveyId)
-
         return Response(resultForm, status.HTTP_200_OK)
 
     def checkIsFirstSubmit(self, request):
