@@ -25,15 +25,15 @@ class SurveyQuestionRepositoryImpl(SurveyQuestionRepository):
             SurveyQuestion.objects.create(survey_id=survey, question=questionTitle,
                                           question_type=questionType, essential=essential)
             questionId = SurveyQuestion.objects.get(survey_id=survey, question=questionTitle, question_type=questionType, essential=essential)
-            if len(images) !=0:
-                for image in images:
-                    SurveyImage.objects.create(question_id=questionId, image=image.name)
-                    uploadDirectory = '..\\..\\AIM-Sniper-frontend\\src\\assets\\images\\uploadimages'
-                    imagePath = os.path.join(uploadDirectory, image.name)
-                    with open(imagePath, 'wb+') as destination:
-                        for chunk in image.chunks():
-                            destination.write(chunk)
-                    print('이미지 경로: ', imagePath)
+            # if len(images) !=0:
+            #     for image in images:
+            #         SurveyImage.objects.create(question_id=questionId, image=image.name)
+            #         uploadDirectory = '..\\..\\AIM-Sniper-frontend\\src\\assets\\images\\uploadimages'
+            #         imagePath = os.path.join(uploadDirectory, image.name)
+            #         with open(imagePath, 'wb+') as destination:
+            #             for chunk in image.chunks():
+            #                 destination.write(chunk)
+            #         print('이미지 경로: ', imagePath)
 
             return questionId.id
 
