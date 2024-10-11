@@ -119,7 +119,7 @@ class SurveyServiceImpl(SurveyService):
                 elif answer['questionType'] == 'checkbox':
                     selectionNameArray = answer.get('answer')
                     selectionArray = \
-                        [self.__surveySelectionRepository.findSelectionBySelectionName(selection) for selection in selectionNameArray]
+                        [self.__surveySelectionRepository.findSelectionBySelectionName(question, selection) for selection in selectionNameArray]
                     radioAnswer = self.__surveyAnswerRepository.saveCheckboxAnswer(question, selectionArray, account)
 
         except Exception as e:
