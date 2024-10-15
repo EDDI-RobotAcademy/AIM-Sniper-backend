@@ -1,10 +1,13 @@
 import os
 
+from django.db.models import Sum
+
 from company_report.entity.company_data_finance import FinancialData
 from company_report.entity.company_data_total import CompanyDataTotal
 from company_report.entity.models import CompanyReport
 from company_report.repository.companyReport_repository import CompanyReportRepository
 from AIM_Sniper_backend import settings
+from marketing.entity.models import Marketing
 
 
 class CompanyReportRepositoryImpl(CompanyReportRepository):
@@ -96,3 +99,11 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
     def readCompanyReportSummary(self, companyReportName):
         companyReportSummary = CompanyDataTotal.objects.filter(company_name=companyReportName).values('business_summary')
         return companyReportSummary[0]['business_summary']
+
+    def readTopNCompany(self, topN):
+        # companyReport = CompanyReport.objects.all()
+        sortedCompany = Marketing.objects.values('product').annotate(Sum('click_count')).order_by('-click_count__sum')
+        clickedTopNCompany = [dict['product']
+                                for dict in sortedCompany[:topN].values('product')]
+
+        return clickedTopNCompany
