@@ -1,8 +1,14 @@
+from django.db.models import Count
+from account.entity.account import Account
 from account.entity.account_role_type import AccountRoleType
+from account.entity.login_history import LoginHistory
 from account.repository.profile_repository_impl import ProfileRepositoryImpl
 from management.repository.mangement_repository import ManagementRepository
 from account.entity.profile import Profile
 from marketing.entity.models import Marketing
+from datetime import datetime, date, timedelta
+
+from orders.entity.orders import Orders
 
 
 class ManagementRepositoryImpl(ManagementRepository):
@@ -74,3 +80,37 @@ class ManagementRepositoryImpl(ManagementRepository):
 
         return data  # 데이터를 반환
 
+    def userLogData(self):
+        account = Account.objects.all()
+        today = date.today()  # 오늘의 날짜
+        start_date = datetime.combine(today - timedelta(days=7), datetime.min.time())  # 시작 시간을 오늘의 자정으로 설정
+        end_date = datetime.combine(today + timedelta(days=7), datetime.min.time())  # 종료 시간을 오늘에서 1주일 후의 자정으로 설정
+
+        # 로그인 기록에서 계정 수 필터링
+        filtered_history = LoginHistory.objects.filter(login_at__range=(start_date, end_date)).values(
+            'account_id').distinct().count()
+
+        # 주문 수 필터링
+        orders = Orders.objects.filter(createdDate__range=(start_date, end_date)).values(
+            'account_id').distinct().count()
+
+        # 두 번 이상 주문한 계정 수 필터링
+        two_or_more_orders = Orders.objects.filter(
+            createdDate__range=(start_date, end_date)
+        ).values('account_id').annotate(order_count=Count('id')).filter(order_count__gte=2).count()
+
+        # 각 통계 값 계산
+        userCount = len(account)
+        accountCount = filtered_history
+        purchaseCount = orders
+        revenueCount = two_or_more_orders
+
+        # userData를 딕셔너리 형태로 구성
+        userData = {
+            'userCount': int(userCount),  # 사용자 수
+            'accountCount': int(accountCount),  # 유일한 계정 수
+            'purchaseCount': int(purchaseCount),  # 총 주문 수
+            'revenueCount': int(revenueCount)  # 두 번 이상 구매한 계정 수
+        }
+
+        return userData  # userData 딕셔너리 반환
