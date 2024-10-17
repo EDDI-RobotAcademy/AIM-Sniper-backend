@@ -6,5 +6,5 @@ from company_report.entity.models import CompanyReport
 class CompanyReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompanyReport
-        fields = ['companyReportId', 'companyReportName', 'companyReportPrice','companyReportTitleImage','companyReportCategory', 'content', 'regDate', 'updDate']
+        fields = ['companyReportId', 'companyReportName', 'companyReportPrice','companyReportTitleImage','companyReportCategory','keyword', 'content', 'regDate', 'updDate']
         read_only_fields = ['regDate', 'updDate']
