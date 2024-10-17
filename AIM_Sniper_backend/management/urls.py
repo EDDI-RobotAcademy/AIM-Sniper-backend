@@ -11,5 +11,6 @@ urlpatterns = [
     path('userList', ManagementView.as_view({'get': 'userList'}), name='user-list'),
     path('grant-roleType',ManagementView.as_view({'post':'grantRoleType'}),name='account-grant-role-type'),
     path('revoke-roleType',ManagementView.as_view({'post':'revokeRoleType'}),name='account-revoke-role-type'),
-    path('userLogList',ManagementView.as_view({'post':'userLogList'}),name='user-log-list')
+    path('userLogList',ManagementView.as_view({'post':'userLogList'}),name='user-log-list'),
+    path('data',ManagementView.as_view({'post':'userLogData'}),name='user-log-data'),
 ]

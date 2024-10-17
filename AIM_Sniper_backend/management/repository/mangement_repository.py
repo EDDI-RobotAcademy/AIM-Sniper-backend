@@ -16,3 +16,7 @@ class ManagementRepository(ABC):
     @abstractmethod
     def userLogList(self):
         pass
+
+    @abstractmethod
+    def userLogData(self):
+        pass
