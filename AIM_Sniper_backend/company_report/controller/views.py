@@ -91,3 +91,7 @@ class CompanyReportView(viewsets.ViewSet):
         topNCompanyId = self.companyReportService.readTopNCompany(topN)
 
         return Response(topNCompanyId)
+
+    def updateReport(self, request):
+        self.companyReportService.updateCompanyReport()
+        return Response(status=status.HTTP_200_OK)

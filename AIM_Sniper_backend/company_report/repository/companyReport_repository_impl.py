@@ -1,3 +1,4 @@
+import json
 import os
 
 from django.db.models import Sum
@@ -83,11 +84,9 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
     def readCompanyReportFinance(self, companyReportName):
         # 해당 회사와 연도의 데이터를 필터링
         id=CompanyDataTotal.objects.get(company_name=companyReportName)
-        FinanceData2021 = FinancialData.objects.filter(company=id, year=2021).values('revenue', 'receivable_turnover','operating_cash_flow')
-        FinanceData2022 = FinancialData.objects.filter(company=id, year=2022).values('revenue', 'receivable_turnover',
-                                                                                    'operating_cash_flow')
-        FinanceData2023 = FinancialData.objects.filter(company=id, year=2023).values('revenue', 'receivable_turnover',
-                                                                                    'operating_cash_flow')
+        FinanceData2021 = FinancialData.objects.filter(company=id, year=2021).values('revenue', 'profit_trend','owners_capital')
+        FinanceData2022 = FinancialData.objects.filter(company=id, year=2022).values('revenue', 'profit_trend', 'owners_capital')
+        FinanceData2023 = FinancialData.objects.filter(company=id, year=2023).values('revenue', 'profit_trend', 'owners_capital')
         # 결과 반환
         return list(FinanceData2021),list(FinanceData2022),list(FinanceData2023)
 
@@ -107,3 +106,71 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
                                 for dict in sortedCompany[:topN].values('product')]
 
         return clickedTopNCompany
+
+    def saveDataToCompanyTotalDB(self, corpName, corpData):
+        company, created = CompanyDataTotal.objects.get_or_create(
+            company_name=corpName,
+            defaults={
+                "est_date": corpData["est_dt"],
+                "company_class": corpData["corp_cls"],
+                "ceo_name": corpData["ceo_nm"],
+                "address": corpData["adres"],
+                "website": corpData["hm_url"],
+                "business_summary": corpData["businessSummary"],
+                "revenue_table": corpData["revenueTable"],
+            }
+        )
+
+        if not created:
+            company.est_date = corpData["est_dt"]
+            company.company_class = corpData["corp_cls"]
+            company.ceo_name = corpData["ceo_nm"]
+            company.address = corpData["adres"]
+            company.website = corpData["hm_url"]
+            company.business_summary = corpData["businessSummary"]
+            company.revenue_table = corpData["revenueTable"]
+
+            company.save()
+
+    def getDataFromFinanceKeys(self, financeDict, index):
+        return list(financeDict.keys())[index]
+
+    def getDataFromFinanceValues(self, financeDict, index):
+        return list(financeDict.values())[index]
+
+    def saveDataToCompanyFinanceDB(self, corpName, corpData):
+        try:
+            company = CompanyDataTotal.objects.get(company_name=corpName)
+
+            loopMax = len(corpData['revenueTrend'])
+            for index in range(loopMax):
+                finance, created = FinancialData.objects.update_or_create(
+                    company=company,
+                    year=self.getDataFromFinanceKeys(corpData['revenueTrend'], index),
+                    defaults={
+                        "revenue": self.getDataFromFinanceValues(corpData['revenueTrend'], index),
+                        "profit_trend": self.getDataFromFinanceValues(corpData['profitTrend'], index),
+                        "owners_capital": self.getDataFromFinanceValues(corpData['ownersCapital'], index),
+                    }
+                )
+                company.save()
+
+        except CompanyDataTotal.DoesNotExist:
+            print(f"--> Error: 회사 '{corpName}'가 존재하지 않습니다. 먼저 회사를 저장하세요.")
+
+
+    def updateDataToDB(self):
+        companyData = None
+        with open("./assets/report.json", "r", encoding="utf-8-sig") as file:
+            companyData = json.load(file)
+
+        for corpName in companyData.keys():
+            try:
+                self.saveDataToCompanyTotalDB(corpName, companyData[corpName])
+            except Exception as e:
+                print(f"* Total Save Fail ({corpName}) -> {e}")
+
+            try:
+                self.saveDataToCompanyFinanceDB(corpName, companyData[corpName])
+            except Exception as e:
+                print(f"* Finance Save Fail ({corpName}) -> {e}")
