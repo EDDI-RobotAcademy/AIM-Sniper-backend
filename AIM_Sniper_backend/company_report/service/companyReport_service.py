@@ -31,3 +31,11 @@ class CompanyReportService(ABC):
     @abstractmethod
     def readCompanyReportSummary(self,companyReportName):
         pass
+
+    @abstractmethod
+    def readTopNCompany(self, topN):
+        pass
+
+    @abstractmethod
+    def updateCompanyReport(self):
+        pass
