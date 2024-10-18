@@ -42,9 +42,6 @@ class CompanyReportServiceImpl(CompanyReportService):
     def readCompanyReportInfo(self, companyReportName):
         return self.__companyReportRepository.readCompanyReportInfo(companyReportName)
 
-    def readCompanyReportSummary(self, companyReportName):
-        return self.__companyReportRepository.readCompanyReportSummary(companyReportName)
-
     def readTopNCompany(self, topN):
         return self.__companyReportRepository.readTopNCompany(topN)
 

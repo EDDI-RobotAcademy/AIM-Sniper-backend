@@ -39,10 +39,6 @@ class CompanyReportRepository(ABC):
         pass
 
     @abstractmethod
-    def readCompanyReportSummary(self,companyReportName):
-        pass
-
-    @abstractmethod
     def readTopNCompany(self, topN):
         pass
 

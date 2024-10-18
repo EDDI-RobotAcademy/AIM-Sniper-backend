@@ -90,14 +90,11 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
         # 결과 반환
         return list(FinanceData2021),list(FinanceData2022),list(FinanceData2023)
 
-    def readCompanyReportInfo(self,companyReportName):
+    def readCompanyReportInfo(self, companyReportName):
         companyReportInfo = CompanyDataTotal.objects.filter(company_name=companyReportName)
-        basicInfo=companyReportInfo.values('company_name','est_date','company_class','ceo_name','address','website')
+        basicInfo=companyReportInfo.values(
+            'company_name','est_date','company_class','ceo_name','address','website','business_summary','revenue_table')
         return basicInfo
-
-    def readCompanyReportSummary(self, companyReportName):
-        companyReportSummary = CompanyDataTotal.objects.filter(company_name=companyReportName).values('business_summary')
-        return companyReportSummary[0]['business_summary']
 
     def readTopNCompany(self, topN):
         # companyReport = CompanyReport.objects.all()
