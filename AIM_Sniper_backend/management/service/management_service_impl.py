@@ -29,4 +29,8 @@ class ManagementServiceImpl(ManagementService):
     def getUserLogList(self):
         return self.__managementRepository.userLogList()
 
+    def getUserLogData(self):
+        return self.__managementRepository.userLogData()
+
+
 

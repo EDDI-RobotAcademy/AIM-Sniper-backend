@@ -10,6 +10,7 @@ class CompanyDataTotal(models.Model):
     address = models.CharField(max_length=255, null=True)
     website = models.URLField(max_length=200, null=True)
     business_summary = models.TextField(null=True)
+    revenue_table = models.TextField(null=True)
 
     def __str__(self):
         return self.company_name

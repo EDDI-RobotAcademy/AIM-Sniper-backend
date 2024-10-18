@@ -15,3 +15,6 @@ class ManagementService(ABC):
     @abstractmethod
     def getUserLogList(self):
         pass
+    @abstractmethod
+    def getUserLogData(self):
+        pass
