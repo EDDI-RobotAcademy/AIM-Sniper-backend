@@ -81,11 +81,6 @@ class CompanyReportView(viewsets.ViewSet):
         companyReportInfo = self.companyReportService.readCompanyReportInfo(companyName)
         return Response(companyReportInfo)  # JsonResponse가 자동으로 처리해줍니다.
 
-    def readCompanyReportSummary(self, request):
-        companyName = request.data.get('companyReportName')
-        companyReportSummary = self.companyReportService.readCompanyReportSummary(companyName)
-        return Response(companyReportSummary)  # JsonResponse가 자동으로 처리해줍니다.
-
     def readTopClickedCompany(self, request):
         topN = request.data.get('params').get('topN')
         topNCompanyId = self.companyReportService.readTopNCompany(topN)
