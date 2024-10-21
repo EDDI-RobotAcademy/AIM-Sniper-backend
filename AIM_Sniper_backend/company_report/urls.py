@@ -17,4 +17,5 @@ urlpatterns = [
     path('info',CompanyReportView.as_view({'post':'readCompanyReportInfo'}),name='company-report-info'),
     path('top',CompanyReportView.as_view({'post':'readTopClickedCompany'}),name='company-report-top'),
     path('update',CompanyReportView.as_view({'post':'updateReport'}),name='company-report-update'),
+    path('keyword',CompanyReportView.as_view({'post':'saveKeyword'}),name='company-report-keyword')
 ]

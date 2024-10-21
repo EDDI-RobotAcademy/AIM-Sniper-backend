@@ -45,5 +45,8 @@ class CompanyReportServiceImpl(CompanyReportService):
     def readTopNCompany(self, topN):
         return self.__companyReportRepository.readTopNCompany(topN)
 
-    def updateCompanyReport(self):
+    def updateCompanyReportDB(self):
         return self.__companyReportRepository.updateDataToDB()
+
+    def saveKeyword(self):
+        return self.__companyReportRepository.label_and_save_keyword()

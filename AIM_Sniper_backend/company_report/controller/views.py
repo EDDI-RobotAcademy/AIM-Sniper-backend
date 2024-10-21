@@ -88,5 +88,9 @@ class CompanyReportView(viewsets.ViewSet):
         return Response(topNCompanyId)
 
     def updateReport(self, request):
-        self.companyReportService.updateCompanyReport()
+        self.companyReportService.updateCompanyReportDB()
+        return Response(status=status.HTTP_200_OK)
+
+    def saveKeyword(self, request):
+        self.companyReportService.saveKeyword()
         return Response(status=status.HTTP_200_OK)

@@ -61,3 +61,7 @@ class CompanyReportRepository(ABC):
     @abstractmethod
     def updateDataToDB(self):
         pass
+
+    @abstractmethod
+    def label_and_save_keyword(self):
+        pass

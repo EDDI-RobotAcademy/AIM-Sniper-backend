@@ -33,5 +33,9 @@ class CompanyReportService(ABC):
         pass
 
     @abstractmethod
-    def updateCompanyReport(self):
+    def updateCompanyReportDB(self):
+        pass
+
+    @abstractmethod
+    def saveKeyword(self):
         pass
