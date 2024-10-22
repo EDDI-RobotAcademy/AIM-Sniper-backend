@@ -42,11 +42,11 @@ class CompanyReportServiceImpl(CompanyReportService):
     def readCompanyReportInfo(self, companyReportName):
         return self.__companyReportRepository.readCompanyReportInfo(companyReportName)
 
-    def readCompanyReportSummary(self, companyReportName):
-        return self.__companyReportRepository.readCompanyReportSummary(companyReportName)
-
     def readTopNCompany(self, topN):
         return self.__companyReportRepository.readTopNCompany(topN)
 
-    def updateCompanyReport(self):
+    def updateCompanyReportDB(self):
         return self.__companyReportRepository.updateDataToDB()
+
+    def saveKeyword(self):
+        return self.__companyReportRepository.label_and_save_keyword()
