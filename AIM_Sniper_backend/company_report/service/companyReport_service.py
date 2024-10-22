@@ -16,3 +16,26 @@ class CompanyReportService(ABC):
     def deleteCompanyReport(self,companyReportId):
         pass
 
+    @abstractmethod
+    def updateCompanyReport(self,companyReportId,companyReportData):
+        pass
+
+    @abstractmethod
+    def readCompanyReportFinance(self,companyReportName):
+        pass
+
+    @abstractmethod
+    def readCompanyReportInfo(self,companyReportName):
+        pass
+
+    @abstractmethod
+    def readTopNCompany(self, topN):
+        pass
+
+    @abstractmethod
+    def updateCompanyReportDB(self):
+        pass
+
+    @abstractmethod
+    def saveKeyword(self):
+        pass

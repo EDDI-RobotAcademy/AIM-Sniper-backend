@@ -50,3 +50,47 @@ class CompanyReportView(viewsets.ViewSet):
         self.companyReportService.deleteCompanyReport(pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def modifyCompanyReport(self, request, pk=None):
+        companyReport = self.companyReportService.readCompanyReport(pk)
+        # print(f"request Data: {request.data}")
+        serializer = CompanyReportSerializer(companyReport, data=request.data, partial=True)
+        # print(f"Request Data: {request.data}")  # 이 부분에서 front에서 전달된 데이터를 확인
+        if serializer.is_valid():
+            # print(f"Validated Data: {serializer.validated_data}")  # 검증된 데이터를 출력하여 확인
+            updateCompanyReport = self.companyReportService.updateCompanyReport(pk, serializer.validated_data)
+            return Response(CompanyReportSerializer(updateCompanyReport).data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def readCompanyReportFinance(self, request):
+        companyName = request.data.get('companyReportName')
+        companyReportFinance = self.companyReportService.readCompanyReportFinance(companyName)
+
+        # companyReportFinance는 (리스트2021, 리스트2022, 리스트2023) 형태입니다.
+        # 이를 하나의 리스트로 합쳐서 반환합니다.
+        combinedFinanceData = {
+            '2021': companyReportFinance[0],
+            '2022': companyReportFinance[1],
+            '2023': companyReportFinance[2],
+        }
+
+        return Response(combinedFinanceData)  # JsonResponse가 자동으로 처리해줍니다.
+
+    def readCompanyReportInfo(self, request):
+        companyName = request.data.get('companyReportName')
+        companyReportInfo = self.companyReportService.readCompanyReportInfo(companyName)
+        return Response(companyReportInfo)  # JsonResponse가 자동으로 처리해줍니다.
+
+    def readTopClickedCompany(self, request):
+        topN = request.data.get('params').get('topN')
+        topNCompanyId = self.companyReportService.readTopNCompany(topN)
+
+        return Response(topNCompanyId)
+
+    def updateReport(self, request):
+        self.companyReportService.updateCompanyReportDB()
+        return Response(status=status.HTTP_200_OK)
+
+    def saveKeyword(self, request):
+        self.companyReportService.saveKeyword()
+        return Response(status=status.HTTP_200_OK)

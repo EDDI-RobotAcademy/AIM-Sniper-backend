@@ -11,6 +11,10 @@ class CompanyReportRepository(ABC):
         pass
 
     @abstractmethod
+    def update(self,companyReport,companyReportData):
+        pass
+
+    @abstractmethod
     def findByCompanyReportId(self, companyReportId):
         pass
 
@@ -24,4 +28,40 @@ class CompanyReportRepository(ABC):
 
     @abstractmethod
     def deleteByCompanyReportId(self,companyReportId):
+        pass
+
+    @abstractmethod
+    def readCompanyReportFinance(self, companyReportName):
+        pass
+
+    @abstractmethod
+    def readCompanyReportInfo(self,companyReportName):
+        pass
+
+    @abstractmethod
+    def readTopNCompany(self, topN):
+        pass
+
+    @abstractmethod
+    def saveDataToCompanyTotalDB(self, corpName, corpData):
+        pass
+
+    @abstractmethod
+    def getDataFromFinanceKeys(self, financeDict, index):
+        pass
+
+    @abstractmethod
+    def getDataFromFinanceValues(self, financeDict, index):
+        pass
+
+    @abstractmethod
+    def saveDataToCompanyFinanceDB(self, corpName, corpData):
+        pass
+
+    @abstractmethod
+    def updateDataToDB(self):
+        pass
+
+    @abstractmethod
+    def label_and_save_keyword(self):
         pass

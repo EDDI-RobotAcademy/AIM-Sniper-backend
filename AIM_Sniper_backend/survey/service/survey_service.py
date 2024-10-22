@@ -19,7 +19,7 @@ class SurveyService(ABC):
         pass
 
     @abstractmethod
-    def registerQuestion(self, survey, questionTitle, questionType, essential):
+    def registerQuestion(self, survey, questionTitle, questionType, essential, images):
         pass
 
     @abstractmethod
@@ -35,7 +35,7 @@ class SurveyService(ABC):
         pass
 
     @abstractmethod
-    def geyServeyById(self, surveyId):
+    def getServeyById(self, surveyId):
         pass
 
     @abstractmethod
@@ -44,4 +44,12 @@ class SurveyService(ABC):
 
     @abstractmethod
     def getSurveyIdByRandomString(self, randomString):
+        pass
+
+    @abstractmethod
+    def getResultById(self, surveyId):
+        pass
+
+    @abstractmethod
+    def getAnswerByAccountId(self, accountId):
         pass

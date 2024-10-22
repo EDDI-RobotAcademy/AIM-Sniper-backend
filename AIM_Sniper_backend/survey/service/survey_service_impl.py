@@ -32,6 +32,10 @@ class SurveyServiceImpl(SurveyService):
 
         return cls.__instance
 
+    def getRecentSurvey(self):
+        recentId = self.__surveyRepository.getMaxId()
+        return recentId
+
     def createSurveyForm(self, randomString):
         maxId = self.__surveyRepository.getMaxId()
         self.__surveyRepository.registerSurvey(randomString)
@@ -54,15 +58,16 @@ class SurveyServiceImpl(SurveyService):
             print('설문 제목, 설명 저장 중 오류 발생 : ', e)
             return False
 
-    def registerQuestion(self, survey, questionTitle, questionType, essential):
+    def registerQuestion(self, survey, questionTitle, questionType, essential, images):
         try:
-            result = (
-                self.__surveyQuestionRepository.registerQuestion(survey, questionTitle, questionType, essential))
-            return result
+            question = (
+                self.__surveyQuestionRepository.registerQuestion(survey, questionTitle, questionType, essential, images))
+            return question
 
         except Exception as e:
             print('설문 질문 저장 중 오류 발생 : ', e)
             return False
+
 
     def registerSelection(self, question, selection):
         try:
@@ -78,7 +83,7 @@ class SurveyServiceImpl(SurveyService):
     def getRandomStringList(self):
         return self.__surveyRepository.getAllRandomString()
 
-    def geyServeyById(self, surveyId):
+    def getServeyById(self, surveyId):
         surveyTitle = self.__surveyTitleRepository.getTitleBySurveyId(surveyId)
         surveyDescription = self.__surveyDescriptionRepository.getDescriptionBySurveyId(surveyId)
         surveyQuestions = self.__surveyQuestionRepository.getQuestionsBySurveyId(surveyId)
@@ -107,15 +112,15 @@ class SurveyServiceImpl(SurveyService):
                     textAnswer = self.__surveyAnswerRepository.saveTextAnswer(question, answer, account)
 
                 elif answer['questionType'] == 'radio':
-                    selectionId = answer.get('selectionId')
-                    selection = self.__surveySelectionRepository.findSelection(selectionId)
+                    selection = answer.get('answer')
+                    selection = self.__surveySelectionRepository.findSelectionBySelectionName(question, selection)
                     checkboxAnswer = self.__surveyAnswerRepository.saveRadioAnswer(question, selection, account)
 
                 elif answer['questionType'] == 'checkbox':
-                    selectionIdArray = answer.get('selectionIdArray')
-                    selectionIdArray = \
-                        [self.__surveySelectionRepository.findSelection(selection) for selection in selectionIdArray]
-                    radioAnswer = self.__surveyAnswerRepository.saveCheckboxAnswer(question, selectionIdArray, account)
+                    selectionNameArray = answer.get('answer')
+                    selectionArray = \
+                        [self.__surveySelectionRepository.findSelectionBySelectionName(question, selection) for selection in selectionNameArray]
+                    radioAnswer = self.__surveyAnswerRepository.saveCheckboxAnswer(question, selectionArray, account)
 
         except Exception as e:
             print('답변 저장중 오류 발생: ', {e})
@@ -125,6 +130,33 @@ class SurveyServiceImpl(SurveyService):
 
     def getRandomstringBySurveyId(self,surveyId):
         return self.__surveyRepository.findRandomStringBySurveyId(surveyId)
+
+    def getResultById(self, surveyId):
+        surveyTitle = self.__surveyTitleRepository.getTitleBySurveyId(surveyId)
+        surveyDescription = self.__surveyDescriptionRepository.getDescriptionBySurveyId(surveyId)
+        surveyQuestions = self.__surveyQuestionRepository.getQuestionsBySurveyId(surveyId)
+
+        for question in surveyQuestions:
+            if question['questionType'] == 'text':
+                answer = self.__surveyAnswerRepository.getTextAnswersByQuestionId(question['questionId'])
+                question['answer'] = answer
+            else:
+                selectionAnswer = self.__surveyAnswerRepository.getSelectionAnswersByQuestionId(question['questionId'])
+                convertedData = {}
+                for selectionId, value in selectionAnswer.items():
+                    selectionName = self.__surveySelectionRepository.findSelectionBySelectionId(selectionId).selection
+                    convertedData[selectionName] = value
+
+                question['selection'] = convertedData
+        resultForm = {'surveyId': surveyId, 'surveyTitle': surveyTitle,
+                'surveyDescription': surveyDescription, 'surveyQuestions': surveyQuestions}
+        print('resultForm 생성이 완료되었습니다 : \n', resultForm)
+        return resultForm
+
+    def getAnswerByAccountId(self, accountId):
+        accountId = self.__accountRepository.findById(accountId)
+        isSubmitted = self.__surveyAnswerRepository.getAnswerByAccountId(accountId)
+        return isSubmitted
 
 
 
