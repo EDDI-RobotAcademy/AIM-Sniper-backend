@@ -33,7 +33,7 @@ class CompanyReportService(ABC):
         pass
 
     @abstractmethod
-    def updateCompanyReportDB(self):
+    def updateCompanyReportDB(self, data):
         pass
 
     @abstractmethod
