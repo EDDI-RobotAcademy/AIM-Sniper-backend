@@ -33,4 +33,5 @@ urlpatterns = [
     path('marketing/',include('marketing.urls')),
     path('management/',include('management.urls')),
     path('interview/', include('interview.urls')),
+    path('interview_result/', include('interview_result.urls'))
 ]
