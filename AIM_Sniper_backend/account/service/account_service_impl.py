@@ -59,3 +59,7 @@ class AccountServiceImpl(AccountService):
     def findRoleTypeByEmail(self,email):
         RoleType = self.__profileRepository.findByRoleType(email)
         return RoleType
+
+    def findProfileByEmail(self, email):
+        profile = self.__profileRepository.findByEmail(email)
+        return profile

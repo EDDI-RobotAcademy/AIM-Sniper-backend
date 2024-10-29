@@ -33,3 +33,7 @@ class AccountService(ABC):
     @abstractmethod
     def findRoleTypeByEmail(self,email):
         pass
+
+    @abstractmethod
+    def findProfileByEmail(self,email):
+        pass
