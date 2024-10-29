@@ -104,7 +104,7 @@ class OrdersView(viewsets.ViewSet):
 
     def checkOrderItemDuplication(self, request):
         email = request.data['payload']['email']
-        companyReportId = request.data['payload']['companyReportId']
+        companyReportId = int(request.data['payload']['companyReportId'])
 
         accountId = self.profileRepository.findByEmail(email)
         ordersList = self.ordersService.findAllByAccountId(accountId.account_id)
