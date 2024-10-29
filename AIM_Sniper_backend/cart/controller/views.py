@@ -53,7 +53,7 @@ class CartView(viewsets.ViewSet):
         if list(data.keys())[0] == 'companyReportId':
             cartItemList = CartItem.objects.all()
             for cartItem in cartItemList:
-                if cartItem.product.companyReportId == data['companyReportId'][0]:
+                if cartItem.product.companyReportId == int(data['companyReportId'][0]):
                     self.cartService.removeCartItem([cartItem.cartItemId])
 
         if list(data.keys())[0] == 'CartItemId':
