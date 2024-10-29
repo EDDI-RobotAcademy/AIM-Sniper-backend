@@ -52,7 +52,7 @@ class CartItemRepositoryImpl(CartItemRepository):
 
     def checkDuplication(self, cartItemList, companyReportId):
         for cartItem in cartItemList:
-            if cartItem.product.companyReportId == companyReportId:
+            if str(cartItem.product.companyReportId) == str(companyReportId):
                 return True
 
         return False

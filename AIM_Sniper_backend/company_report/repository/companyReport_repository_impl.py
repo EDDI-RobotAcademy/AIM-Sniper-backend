@@ -298,10 +298,12 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
         except CompanyDataTotal.DoesNotExist:
             print(f"--> Error: 회사 '{corpName}'가 존재하지 않습니다. 먼저 회사를 저장하세요.")
 
-    def updateDataToDB(self):
-        companyData = None
-        with open("./assets/report.json", "r", encoding="utf-8-sig") as file:
-            companyData = json.load(file)
+    def updateDataToDB(self, data):
+        companyData = data
+
+        if companyData == None:
+            with open("./assets/report.json", "r", encoding="utf-8-sig") as file:
+                companyData = json.load(file)
 
         for corpName in companyData.keys():
             try:
