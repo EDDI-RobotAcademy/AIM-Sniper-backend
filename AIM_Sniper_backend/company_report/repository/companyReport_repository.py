@@ -59,7 +59,7 @@ class CompanyReportRepository(ABC):
         pass
 
     @abstractmethod
-    def updateDataToDB(self):
+    def updateDataToDB(self, data):
         pass
 
     @abstractmethod

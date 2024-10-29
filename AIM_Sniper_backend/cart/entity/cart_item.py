@@ -14,8 +14,8 @@ class CartItem(models.Model):
     def __str__(self):
         return (f"CartItem -> id: {self.cartItemId}, "
                 f"cart: {self.cart.cartId}, "
-                f"product: {self.product.productName}, "
-                f"productTitleImage: {self.product.productTitleImage},"
+                # f"product: {self.product.productName}, "
+                # f"productTitleImage: {self.product.productTitleImage},"
                 f"quantity: {self.quantity}")
 
     class Meta:
