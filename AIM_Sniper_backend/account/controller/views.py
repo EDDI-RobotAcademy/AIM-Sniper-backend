@@ -268,3 +268,22 @@ class AccountView(viewsets.ViewSet):
             return Response(None, status=status.HTTP_400_BAD_REQUEST)
         roleType = self.accountService.findRoleTypeByEmail(email)
         return Response({'roleType':str(roleType)},status=status.HTTP_200_OK)
+
+    def getProfile(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
+
+        profile = self.accountService.findProfileByEmail(email)
+        if profile is None:
+            return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # 필요한 필드만 반환, gender 필드를 문자열로 변환
+        profile_data = {
+            'email': profile.email,
+            'nickname': profile.nickname,
+            'gender': str(profile.gender),  # 문자열로 변환
+            'birthyear': profile.birthyear
+        }
+        return Response(profile_data, status=status.HTTP_200_OK)
+
