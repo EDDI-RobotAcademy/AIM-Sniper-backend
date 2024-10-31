@@ -88,7 +88,7 @@ class CompanyReportView(viewsets.ViewSet):
         return Response(topNCompanyId)
 
     def updateReport(self, request):
-        if request:
+        if request.data.get('aiResult'):
             data = request.data['aiResult']
         else:
             base_dir = os.path.dirname(os.path.abspath(__file__))
