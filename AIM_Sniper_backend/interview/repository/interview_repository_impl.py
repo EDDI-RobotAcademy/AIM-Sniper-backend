@@ -1,4 +1,5 @@
 from interview.entity.interview import Interview
+from interview.entity.interview_first_question import InterviewFirstQuestion
 from interview.entity.interview_question import InterviewQuestion
 from interview.repository.interview_repository import InterviewRepository
 
@@ -30,6 +31,9 @@ class InterviewRepositoryImpl(InterviewRepository):
         for question in questionList:
             InterviewQuestion.objects.create(question=question, interview_id=interview)
 
+    def insertFirstQuestion(self, question):
+        InterviewFirstQuestion.objects.create(question=question)
+
     def getData(self, sessionId):
         interview = Interview.objects.get(interview_id=sessionId)
         questions = (InterviewQuestion.objects.filter(interview_id=interview).order_by('id').values_list('question'))
@@ -37,3 +41,8 @@ class InterviewRepositoryImpl(InterviewRepository):
         for question in questions:
             questionList.append(question[0])
         return questionList
+
+    def getFirstQuestion(self, questionId):
+        interviewFirstQuestion = InterviewFirstQuestion.objects.get(id=questionId)
+        firstQuestion = interviewFirstQuestion.question
+        return firstQuestion

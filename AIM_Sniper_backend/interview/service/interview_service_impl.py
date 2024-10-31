@@ -37,6 +37,17 @@ class InterviewServiceImpl(InterviewService):
 
         return True
 
+    def insertFirstQuestion(self):
+        file_path = 'assets\\start_question_3061.json'
+
+        # 파일 열기 및 JSON 파싱
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+
+        [self.__interviewRepositoryImpl.insertFirstQuestion(item["question"]) for item in data]
+
+        return True
+
     def getSession(self, sessionId):
         questionList = self.__interviewRepositoryImpl.getData(sessionId)
         return questionList
