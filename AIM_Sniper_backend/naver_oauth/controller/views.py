@@ -1,6 +1,6 @@
 import uuid
 from urllib import parse
-
+import json
 from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -48,20 +48,31 @@ class NaverOauthView(viewsets.ViewSet):
 
     def redisAccessToken(self, request):
         try:
+            # request.data에서 email 가져오기
             email = request.data.get('email')
+
+            # email 출력 확인
+            print("111111111111111", email)
             print(f"redisAccessToken -> email: {email}")
+
+            # 이메일을 통해 계정 찾기
             account = self.accountService.findAccountByEmail(email)
             if not account:
                 return Response({'error': 'Account not found'}, status=status.HTTP_404_NOT_FOUND)
 
+            # userToken 생성
             userToken = str(uuid.uuid4())
             print(f"type of account.id: {type(account.id)}")
+
+            # Redis에 userToken 저장
             self.redisService.store_access_token(account.id, userToken)
+
             # key로 value 찾기 테스트
             accountId = self.redisService.getValueByKey(userToken)
             print(f"accountId: {accountId}")
 
             return Response({'userToken': userToken}, status=status.HTTP_200_OK)
+
         except Exception as e:
             print('Error storing access token in Redis:', e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
