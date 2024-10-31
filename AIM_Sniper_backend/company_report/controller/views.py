@@ -88,13 +88,15 @@ class CompanyReportView(viewsets.ViewSet):
         return Response(topNCompanyId)
 
     def updateReport(self, request):
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        json_path = os.path.join(base_dir, "../../assets/report.json")
-
-        try:
+        if request:
+            data = request.data['aiResult']
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            json_path = os.path.join(base_dir, "../../assets/report.json")
             with open(json_path, "r", encoding="utf-8-sig") as file:
                 data = json.load(file)
-            # data = request.data['aiResult']
+
+        try:
             self.companyReportService.updateCompanyReportDB(data)
             return Response(status=status.HTTP_200_OK)
         except FileNotFoundError:
