@@ -8,7 +8,7 @@ class CompanyReport(models.Model):
     companyReportId = models.AutoField(primary_key=True)
     companyReportName = models.CharField(max_length=128, null=False)
     companyReportPrice = models.IntegerField(null=False)
-    companyReportCategory = models.CharField(max_length=10, null=False)
+    companyReportCategory = models.CharField(max_length=128, null=False)
     content = models.TextField()
     keyword = models.CharField(max_length=255,null=True)
     companyReportTitleImage = models.CharField(max_length=100,null=True) # 이미지 경로가 들어간다
