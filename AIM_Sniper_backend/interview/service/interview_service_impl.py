@@ -51,3 +51,7 @@ class InterviewServiceImpl(InterviewService):
     def getSession(self, sessionId):
         questionList = self.__interviewRepositoryImpl.getData(sessionId)
         return questionList
+
+    def getFirstQuestion(self, questionId):
+        firstQuestionList = self.__interviewRepositoryImpl.getFirstQuestion(questionId)
+        return firstQuestionList

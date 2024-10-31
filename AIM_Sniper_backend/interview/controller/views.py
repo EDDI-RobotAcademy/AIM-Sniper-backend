@@ -22,3 +22,9 @@ class InterviewView(viewsets.ViewSet):
         print('데이터를 잘 불러왔나?:', sessionId)
         questionList = self.interviewService.getSession(sessionId)
         return Response({'questionList': questionList}, status=status.HTTP_200_OK)
+
+    def getFirstQuestion(self, request):
+        questionId = request.data.get('questionId')
+        print('questionId:', questionId)
+        firstQuestion = self.interviewService.getFirstQuestion(questionId)
+        return Response({'firstQuestion': firstQuestion}, status=status.HTTP_200_OK)

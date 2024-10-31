@@ -13,3 +13,7 @@ class InterviewService(ABC):
     @abstractmethod
     def getSession(self, sessionId):
         pass
+
+    @abstractmethod
+    def getFirstQuestion(self, questionId):
+        pass
