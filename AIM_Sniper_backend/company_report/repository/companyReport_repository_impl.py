@@ -283,6 +283,35 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
 
             # business_summary 필드 값을 가져옴
             content = CompanyDataTotal.objects.filter(company_name=companyName).values('business_summary').first()
+            id = CompanyDataTotal.objects.get(company_name=companyName)
+
+            # 매출 데이터 가져오기
+            finance_data_list = []
+            for year in [2021, 2022, 2023]:
+                finance_data = FinancialData.objects.filter(company=id, year=year).values('revenue').first()
+
+                # 데이터 타입이 딕셔너리인지 확인
+                if isinstance(finance_data, dict):
+                    revenue = finance_data.get('revenue')
+                    if revenue != 0:  # 매출액이 0이 아닌 경우만 추가
+                        finance_data_list.append(revenue)
+                elif isinstance(finance_data, int) and finance_data != 0:
+                    # finance_data가 int 타입일 경우 값이 0이 아니면 추가
+                    finance_data_list.append(finance_data)
+
+            # 평균 매출 계산 (데이터가 있을 때만 계산)
+            if finance_data_list:
+                meanFinanceData = sum(finance_data_list) / len(finance_data_list)
+
+                # 회사 규모 분류
+                if meanFinanceData >= 1_000_000_000_000:  # 예: 연 매출 1조 이상이면 대기업
+                    companyCategory = '매출액 1조 이상'
+                elif meanFinanceData >= 100_000_000_000:  # 예: 연 매출 5000억 이상이면 중견기업
+                    companyCategory = '매출액 1000억 이상 1조 미만'
+                else:  # 예: 연 매출 5000억 미만이면 중소기업
+                    companyCategory = '매출액 1000억 미만'
+            else:
+                companyCategory = '그 외'  # 매출 데이터가 전혀 없을 경우
 
             # CompanyReport 객체가 존재하면 업데이트, 없으면 생성
             CompanyReport.objects.update_or_create(
@@ -290,7 +319,7 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
                 defaults={
                     'companyReportPrice': productPrice,
                     'companyReportTitleImage': productImage,
-                    'companyReportCategory': 'IT',
+                    'companyReportCategory': companyCategory,
                     'content': content
                 }
             )

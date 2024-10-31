@@ -1,5 +1,5 @@
 import json
-
+import os
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -88,9 +88,19 @@ class CompanyReportView(viewsets.ViewSet):
         return Response(topNCompanyId)
 
     def updateReport(self, request):
-        data = request.data['aiResult']
-        self.companyReportService.updateCompanyReportDB(data)
-        return Response(status=status.HTTP_200_OK)
+        if request.data.get('aiResult'):
+            data = request.data['aiResult']
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            json_path = os.path.join(base_dir, "../../assets/report.json")
+            with open(json_path, "r", encoding="utf-8-sig") as file:
+                data = json.load(file)
+
+        try:
+            self.companyReportService.updateCompanyReportDB(data)
+            return Response(status=status.HTTP_200_OK)
+        except FileNotFoundError:
+            return Response({"error": "report.json 파일을 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
 
     def saveKeyword(self, request):
         self.companyReportService.saveKeyword()
