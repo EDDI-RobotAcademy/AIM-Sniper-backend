@@ -272,14 +272,8 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
             companyName = corpName
             productPrice = random.choice([0, 500, 50])
 
-            # companyName.png 파일의 경로를 설정
-            image_path = f"media/image/{companyName}.png"
-
             # 파일이 존재하는지 확인 후 productImage에 값 할당
-            if os.path.exists(image_path):
-                productImage = f"{companyName}.png"
-            else:
-                productImage = None
+            productImage = f"{companyName}.png"
 
             # business_summary 필드 값을 가져옴
             content = CompanyDataTotal.objects.filter(company_name=companyName).values('business_summary').first()
