@@ -270,7 +270,7 @@ class CompanyReportRepositoryImpl(CompanyReportRepository):
     def saveDataToCompanyReport(self, corpName):
         try:
             companyName = corpName
-            productPrice = random.choice([0, 500, 50])
+            productPrice = 1
 
             # 파일이 존재하는지 확인 후 productImage에 값 할당
             productImage = f"{companyName}.png"
