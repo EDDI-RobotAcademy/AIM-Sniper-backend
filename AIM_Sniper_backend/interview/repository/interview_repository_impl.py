@@ -46,8 +46,11 @@ class InterviewRepositoryImpl(InterviewRepository):
             questionList.append(question[0])
         return questionList
 
-
     def getFirstQuestion(self, questionId):
         interviewFirstQuestion = InterviewFirstQuestion.objects.get(id=questionId)
         firstQuestion = interviewFirstQuestion.question
         return firstQuestion
+
+    def getTechQuestion(self, job):
+        techQuestion = InterviewTechQuestion.objects.filter(job=job).order_by("?").first()
+        return techQuestion

@@ -33,3 +33,10 @@ class InterviewView(viewsets.ViewSet):
         print('questionId:', questionId)
         firstQuestion = self.interviewService.getFirstQuestion(questionId)
         return Response({'firstQuestion': firstQuestion}, status=status.HTTP_200_OK)
+
+    def getTechQuestion(self, request):
+        job = request.data.get('job')
+
+        print('job:', job)
+        techQuestion = self.interviewService.getTechQuestion(job=job)
+        return Response({'techQuestion': techQuestion}, status=status.HTTP_200_OK)

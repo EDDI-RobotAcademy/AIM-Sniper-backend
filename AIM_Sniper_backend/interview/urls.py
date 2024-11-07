@@ -12,4 +12,5 @@ urlpatterns = [
     path('insert-tech-question', InterviewView.as_view({'post': 'insertTechQuestion'}), name='insert-tech-question'),
     path('get-session', InterviewView.as_view({'post': 'getSession'}), name='get-session'),
     path('get-first-question', InterviewView.as_view({'post': 'getFirstQuestion'}), name='get-first-question'),
+    path('get-tech-question', InterviewView.as_view({'post': 'getTechQuestion'}), name='get-tech-question'),
 ]
