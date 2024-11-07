@@ -48,6 +48,17 @@ class InterviewServiceImpl(InterviewService):
 
         return True
 
+    def insertTechQuestion(self):
+        file_path = 'assets\\tech_question_3014.json'
+
+        # 파일 열기 및 JSON 파싱
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+
+        [self.__interviewRepositoryImpl.insertTechQuestion(item["question"], item["job"]) for item in data]
+
+        return True
+
     def getSession(self, sessionId):
         questionList = self.__interviewRepositoryImpl.getData(sessionId)
         return questionList
