@@ -17,6 +17,11 @@ class InterviewView(viewsets.ViewSet):
         print("첫 번째 질문 Insert 완료")
         return Response(isSaved, status=status.HTTP_200_OK)
 
+    def insertTechQuestion(self, request):
+        isSaved = self.interviewService.insertTechQuestion()
+        print("기술적 역량 질문 Insert 완료")
+        return Response(isSaved, status=status.HTTP_200_OK)
+
     def getSession(self, request):
         sessionId = request.data.get('sessionId')
         print('데이터를 잘 불러왔나?:', sessionId)
