@@ -15,9 +15,17 @@ class InterviewRepository(ABC):
         pass
 
     @abstractmethod
+    def insertTechQuestion(self, question, job):
+        pass
+
+    @abstractmethod
     def getData(self, sessionId):
         pass
 
     @abstractmethod
     def getFirstQuestion(self, questionId):
+        pass
+
+    @abstractmethod
+    def getTechQuestion(self, job):
         pass

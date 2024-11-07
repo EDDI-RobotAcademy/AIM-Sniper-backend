@@ -11,9 +11,17 @@ class InterviewService(ABC):
         pass
 
     @abstractmethod
+    def insertTechQuestion(self):
+        pass
+
+    @abstractmethod
     def getSession(self, sessionId):
         pass
 
     @abstractmethod
     def getFirstQuestion(self, questionId):
+        pass
+
+    @abstractmethod
+    def getTechQuestion(self, job):
         pass

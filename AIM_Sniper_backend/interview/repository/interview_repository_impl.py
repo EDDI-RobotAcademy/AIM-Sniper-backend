@@ -1,6 +1,9 @@
+import random
+
 from interview.entity.interview import Interview
 from interview.entity.interview_first_question import InterviewFirstQuestion
 from interview.entity.interview_question import InterviewQuestion
+from interview.entity.interview_tech_question import InterviewTechQuestion
 from interview.repository.interview_repository import InterviewRepository
 
 
@@ -34,6 +37,9 @@ class InterviewRepositoryImpl(InterviewRepository):
     def insertFirstQuestion(self, question):
         InterviewFirstQuestion.objects.create(question=question)
 
+    def insertTechQuestion(self, question, job):
+        InterviewTechQuestion.objects.create(question=question, job=job)
+
     def getData(self, sessionId):
         interview = Interview.objects.get(interview_id=sessionId)
         questions = (InterviewQuestion.objects.filter(interview_id=interview).order_by('id').values_list('question'))
@@ -46,3 +52,8 @@ class InterviewRepositoryImpl(InterviewRepository):
         interviewFirstQuestion = InterviewFirstQuestion.objects.get(id=questionId)
         firstQuestion = interviewFirstQuestion.question
         return firstQuestion
+
+    def getTechQuestion(self, job):
+        interviewTech = InterviewTechQuestion.objects.filter(job=job)
+        interviewTechQuestion = random.choice(interviewTech) if interviewTech else None
+        return interviewTechQuestion.question if interviewTechQuestion else None

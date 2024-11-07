@@ -17,6 +17,11 @@ class InterviewView(viewsets.ViewSet):
         print("첫 번째 질문 Insert 완료")
         return Response(isSaved, status=status.HTTP_200_OK)
 
+    def insertTechQuestion(self, request):
+        isSaved = self.interviewService.insertTechQuestion()
+        print("기술적 역량 질문 Insert 완료")
+        return Response(isSaved, status=status.HTTP_200_OK)
+
     def getSession(self, request):
         sessionId = request.data.get('sessionId')
         print('데이터를 잘 불러왔나?:', sessionId)
@@ -28,3 +33,10 @@ class InterviewView(viewsets.ViewSet):
         print('questionId:', questionId)
         firstQuestion = self.interviewService.getFirstQuestion(questionId)
         return Response({'firstQuestion': firstQuestion}, status=status.HTTP_200_OK)
+
+    def getTechQuestion(self, request):
+        job = request.data.get('job').get('_value')
+
+        print('job:', job)
+        techQuestion = self.interviewService.getTechQuestion(job=job)
+        return JsonResponse(techQuestion, safe=False, status=status.HTTP_200_OK)
