@@ -1,3 +1,5 @@
+import random
+
 from interview.entity.interview import Interview
 from interview.entity.interview_first_question import InterviewFirstQuestion
 from interview.entity.interview_question import InterviewQuestion
@@ -52,5 +54,6 @@ class InterviewRepositoryImpl(InterviewRepository):
         return firstQuestion
 
     def getTechQuestion(self, job):
-        techQuestion = InterviewTechQuestion.objects.filter(job=job).order_by("?").first()
-        return techQuestion
+        interviewTech = InterviewTechQuestion.objects.filter(job=job)
+        interviewTechQuestion = random.choice(interviewTech) if interviewTech else None
+        return interviewTechQuestion.question if interviewTechQuestion else None
