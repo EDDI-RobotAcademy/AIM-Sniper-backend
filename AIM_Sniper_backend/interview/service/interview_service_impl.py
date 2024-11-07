@@ -66,3 +66,7 @@ class InterviewServiceImpl(InterviewService):
     def getFirstQuestion(self, questionId):
         firstQuestionList = self.__interviewRepositoryImpl.getFirstQuestion(questionId)
         return firstQuestionList
+
+    def getTechQuestion(self, job):
+        techQuestion = self.__interviewRepositoryImpl.getTechQuestion(job)
+        return techQuestion
